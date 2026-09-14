@@ -76,7 +76,7 @@ export const Contact: React.FC<OfficeProps> = ({
       const data = await getPublicOfficeImagesApi();
       setImages(data);
     } catch (err) {
-      setError('Failed to load office images. Please refresh the page.');
+      setError(t.errorLoadingOfficeImages || 'Failed to load office images. Please refresh the page.');
       console.error('Error loading office images:', err);
     } finally {
       setLoadingImages(false);
@@ -90,8 +90,11 @@ export const Contact: React.FC<OfficeProps> = ({
       setPackages(data);
       if (data.length > 0) {
         const firstPkg = data[0];
+        const title = ((lang || '').toUpperCase() === 'AR' && firstPkg.titleAr)
+          ? firstPkg.titleAr
+          : (((lang || '').toUpperCase() === 'AM' && firstPkg.titleAm) ? firstPkg.titleAm : (firstPkg.titleEn || (firstPkg as any).title));
         const priceDisplay = formatPrice(firstPkg.priceUsd, firstPkg.priceEtb, firstPkg.priceSar, currency, lang, rate);
-        setSubject(`${firstPkg.titleEn} (${priceDisplay})`);
+        setSubject(`${title} (${priceDisplay})`);
       }
     } catch (e) {
       console.error('Failed to load packages for dropdown:', e);
@@ -107,7 +110,7 @@ export const Contact: React.FC<OfficeProps> = ({
       const data = await getFaqsApi();
       setFaqs(data);
     } catch (error) {
-      setFaqError('Failed to load FAQs. Please refresh the page.');
+      setFaqError(t.errorLoadingFaqs || 'Failed to load FAQs. Please refresh the page.');
       console.error('Error loading FAQs:', error);
     } finally {
       setLoadingFaqs(false);
@@ -125,16 +128,23 @@ export const Contact: React.FC<OfficeProps> = ({
         email: email || undefined,
         subject,
         message,
-        source: 'office_contact_form'
+        source: 'office_contact_form',
+        language: (lang || 'en').toLowerCase(),
       });
 
       setSubmitted(true);
       const refNo = `DLT-INQ-${Math.floor(1000 + Math.random() * 9000)}`;
       
       if (onTriggerSmsToast) {
+        const template = t.smsInquiryReceived || "DELTA TRAVEL: Thank you {name}! Your message (Ref {ref}) has been received. Our team will contact you shortly.";
+        const defaultName = (lang || '').toUpperCase() === 'AR' ? 'ضيف الرحمن' : ((lang || '').toUpperCase() === 'AM' ? 'ተጓዥ' : 'Pilgrim');
+        const formattedMsg = template
+          .replace('{name}', fullName || defaultName)
+          .replace('{ref}', refNo);
+
         onTriggerSmsToast(
-          phone || '+2519101367477',
-          `DELTA TRAVEL: Thank you ${fullName || 'Pilgrim'}! Your message (Ref ${refNo}) has been received. Our team will contact you shortly.`
+          phone || '+251 91 013 6747',
+          formattedMsg
         );
       }
 
@@ -147,8 +157,11 @@ export const Contact: React.FC<OfficeProps> = ({
         setMessage('');
         if (packages.length > 0) {
           const firstPkg = packages[0];
+          const title = ((lang || '').toUpperCase() === 'AR' && firstPkg.titleAr)
+            ? firstPkg.titleAr
+            : (((lang || '').toUpperCase() === 'AM' && firstPkg.titleAm) ? firstPkg.titleAm : (firstPkg.titleEn || (firstPkg as any).title));
           const priceDisplay = formatPrice(firstPkg.priceUsd, firstPkg.priceEtb, firstPkg.priceSar, currency, lang, rate);
-          setSubject(`${firstPkg.titleEn} (${priceDisplay})`);
+          setSubject(`${title} (${priceDisplay})`);
         }
       }, 6000);
     } catch (err) {
@@ -279,8 +292,12 @@ export const Contact: React.FC<OfficeProps> = ({
               </div>
               <div>
                 <h4 className="font-bold text-slate-900 text-sm">{t.phoneLines}</h4>
-                <p className="text-slate-600 mt-0.5">{t.mainHotline || "Main Hotline"}: +251 91 013 6747 / +251 95 658 5555 / +251 95 659 5555 </p>
-                <p className="text-slate-600">{t.whatsapp || "WhatsApp"}: +251 91 049 3349 / +251 91 013 6747</p>
+                <p className="text-slate-600 mt-0.5">
+                  {t.mainHotline || "Main Hotline"}: <span dir="ltr" className="whitespace-nowrap inline-block">+251 91 013 6747</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 95 658 5555</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 95 659 5555</span>
+                </p>
+                <p className="text-slate-600">
+                  {t.whatsapp || "WhatsApp"}: <span dir="ltr" className="whitespace-nowrap inline-block">+251 91 049 3349</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 91 013 6747</span>
+                </p>
               </div>
             </div>
 
@@ -388,7 +405,9 @@ export const Contact: React.FC<OfficeProps> = ({
                       <option disabled>{t.noPackagesAvailable}</option>
                     ) : (
                       packages.map((pkg) => {
-                        const title = pkg.titleEn || (pkg as any).title;
+                        const title = ((lang || '').toUpperCase() === 'AR' && pkg.titleAr)
+                          ? pkg.titleAr
+                          : (((lang || '').toUpperCase() === 'AM' && pkg.titleAm) ? pkg.titleAm : (pkg.titleEn || (pkg as any).title));
                         const priceDisplay = formatPrice(pkg.priceUsd, pkg.priceEtb, pkg.priceSar, currency, lang, rate);
                         return (
                           <option key={pkg.id} value={`${title} (${priceDisplay})`}>
@@ -502,6 +521,12 @@ export const Contact: React.FC<OfficeProps> = ({
             <div className="space-y-4">
               {faqs.map((faq, index) => {
                 const isExpanded = expandedIndex === index;
+                const question = ((lang || '').toUpperCase() === 'AR' && faq.questionAr)
+                  ? faq.questionAr
+                  : (((lang || '').toUpperCase() === 'AM' && faq.questionAm) ? faq.questionAm : faq.question);
+                const answer = ((lang || '').toUpperCase() === 'AR' && faq.answerAr)
+                  ? faq.answerAr
+                  : (((lang || '').toUpperCase() === 'AM' && faq.answerAm) ? faq.answerAm : faq.answer);
 
                 return (
                   <div 
@@ -512,11 +537,11 @@ export const Contact: React.FC<OfficeProps> = ({
                       onClick={() => toggleFaq(index)}
                       className="w-full px-6 py-4 flex items-center justify-between hover:bg-[#F9FAFB] transition-colors"
                     >
-                      <div className="flex items-center gap-3 text-left">
+                      <div className="flex items-center gap-3 text-left rtl:text-right">
                         <span className="text-[#C8102E] font-bold text-sm">Q{index + 1}.</span>
-                        <h3 className="font-semibold text-slate-900 text-sm">{faq.question}</h3>
+                        <h3 className="font-semibold text-slate-900 text-sm">{question}</h3>
                       </div>
-                      <div className="flex-shrink-0 ml-4">
+                      <div className="flex-shrink-0 ml-4 rtl:ml-0 rtl:mr-4">
                         {isExpanded ? (
                           <Minus className="w-5 h-5 text-[#C8102E]" />
                         ) : (
@@ -528,7 +553,7 @@ export const Contact: React.FC<OfficeProps> = ({
                     {isExpanded && (
                       <div className="px-6 pb-5 pt-1 border-t border-slate-100">
                         <p className="text-sm text-slate-600 leading-relaxed">
-                          <span className="font-bold text-[#C8102E]">A:</span> {faq.answer}
+                          <span className="font-bold text-[#C8102E]">A:</span> {answer}
                         </p>
                       </div>
                     )}

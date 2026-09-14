@@ -259,11 +259,13 @@ export const Packages: React.FC<PackagesProps> = ({
                         <span className="flex items-center gap-1 text-red-500 font-bold">
                           <Star className="w-3.5 h-3.5 fill-red-500" /> {pkg.rating || 4.8} ({pkg.reviewsCount || 0} reviews)
                         </span>
-                        <span className="text-slate-700 font-medium text-sm">From {pkg.departureCity}</span>
+                        <span className="text-slate-700 font-medium text-sm">
+                          {t.fromLabel || 'From'} {((lang || '').toUpperCase() === 'AR' && pkg.departureCityAr) ? pkg.departureCityAr : (((lang || '').toUpperCase() === 'AM' && pkg.departureCityAm) ? pkg.departureCityAm : pkg.departureCity)}
+                        </span>
                       </div>
 
                       <h3 className="font-bold text-base text-slate-900 mb-2">
-                        {((lang || '').toUpperCase() === 'AR') ? pkg.titleAr : (((lang || '').toUpperCase() === 'AM') && pkg.titleAm) ? pkg.titleAm : pkg.titleEn}
+                        {((lang || '').toUpperCase() === 'AR') ? (pkg.titleAr || pkg.titleEn) : (((lang || '').toUpperCase() === 'AM') && pkg.titleAm) ? pkg.titleAm : pkg.titleEn}
                       </h3>
 
                       {/* Discounts Display - USING THE SAME LOGIC AS THE MODAL */}
@@ -271,6 +273,15 @@ export const Packages: React.FC<PackagesProps> = ({
                         <div className="space-y-2 mb-4">
                           {activeDiscounts.map((discount, idx) => {
                             const type = getDiscountType(discount);
+                            const discountLabel = ((lang || '').toUpperCase() === 'AR' && discount.labelAr)
+                              ? discount.labelAr
+                              : (((lang || '').toUpperCase() === 'AM' && discount.labelAm) ? discount.labelAm : discount.label);
+                            const discountDesc = ((lang || '').toUpperCase() === 'AR' && discount.descriptionAr)
+                              ? discount.descriptionAr
+                              : (((lang || '').toUpperCase() === 'AM' && discount.descriptionAm) ? discount.descriptionAm : discount.description);
+                            const ageGroup = ((lang || '').toUpperCase() === 'AR' && discount.ageGroupAr)
+                              ? discount.ageGroupAr
+                              : (((lang || '').toUpperCase() === 'AM' && discount.ageGroupAm) ? discount.ageGroupAm : discount.ageGroup);
                             
                             return (
                               <div 
@@ -281,27 +292,27 @@ export const Packages: React.FC<PackagesProps> = ({
                                 <div className="flex-1">
                                   <div className="flex flex-wrap items-center gap-1.5">
                                     <span className={`font-bold text-sm ${getDiscountTextColor()}`}>
-                                      {discount.label}
+                                      {discountLabel}
                                     </span>
                                     <span className={`text-sm font-semibold ${getDiscountTextColor()}`}>
-                                      {discount.type === 'percentage' ? `${discount.value}% off` : `$${discount.value} off`}
+                                      {discount.type === 'percentage' ? `${discount.value}% ${t.offLabel || 'off'}` : `$${discount.value} ${t.offLabel || 'off'}`}
                                     </span>
                                   </div>
                                   {/* USING THE SAME LOGIC AS THE MODAL */}
                                   <div className="mt-0.5">
-                                    {discount.description && (
+                                    {discountDesc && (
                                       <span className={`text-xs ${getDiscountTextColor()} opacity-75`}>
-                                        {discount.description}
+                                        {discountDesc}
                                       </span>
                                     )}
                                     {discount.minPersons && (
                                       <span className={`text-xs ${getDiscountTextColor()} opacity-75 ml-2`}>
-                                        {discount.minPersons}+ Persons
+                                        {discount.minPersons}+ {t.personsLabel || 'Persons'}
                                       </span>
                                     )}
-                                    {discount.ageGroup && (
+                                    {ageGroup && (
                                       <span className={`text-xs ${getDiscountTextColor()} opacity-75 ml-2`}>
-                                        Age: {discount.ageGroup}
+                                        {t.ageLabel || 'Age:'} {ageGroup}
                                       </span>
                                     )}
                                     {/* Handle ageMin/ageMax for "Ages" display */}
@@ -326,7 +337,7 @@ export const Packages: React.FC<PackagesProps> = ({
                       )}
 
                       <div className="space-y-2 text-sm text-slate-700">
-                        <p className="font-bold text-xs uppercase text-slate-800 tracking-wider mb-1.5">Inclusions & Perks:</p>
+                        <p className="font-bold text-xs uppercase text-slate-800 tracking-wider mb-1.5">{t.inclusionsAndPerks || 'Inclusions & Perks:'}</p>
                         {(pkg.inclusions || []).slice(0, 4).map((inc, i) => (
                           <p key={i} className="flex items-center gap-2.5 text-sm">
                             <CheckCircle className="w-4 h-4 text-red-600 flex-shrink-0" />
@@ -344,12 +355,17 @@ export const Packages: React.FC<PackagesProps> = ({
                         onClick={() => onSelectPackage(pkg)}
                         className="flex-1 bg-[#C8102E] hover:bg-[#a60d25] text-white font-bold text-xs py-2.5 rounded-lg transition-colors flex items-center justify-center gap-1"
                       >
-                        <span>Details</span>
+                        <span>{t.detailsBtn || 'Details'}</span>
                         <ChevronRight className="w-3.5 h-3.5 rtl:rotate-180" />
                       </button>
 
                       <button
-                        onClick={() => trackAndOpenWhatsApp(pkg.id, `Inquiry for ${pkg.titleEn}`)}
+                        onClick={() => {
+                          const titleForWhatsapp = ((lang || '').toUpperCase() === 'AR' && pkg.titleAr)
+                            ? pkg.titleAr
+                            : (((lang || '').toUpperCase() === 'AM' && pkg.titleAm) ? pkg.titleAm : pkg.titleEn);
+                          trackAndOpenWhatsApp(pkg.id, titleForWhatsapp, pkg.priceUsd ?? pkg.price, (lang || 'en').toLowerCase());
+                        }}
                         className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 rounded-lg shadow-sm transition-colors flex items-center justify-center gap-1.5"
                       >
                         <svg 
@@ -359,7 +375,7 @@ export const Packages: React.FC<PackagesProps> = ({
                         >
                           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                         </svg>
-                        <span>Chat on WhatsApp</span>
+                        <span>{t.chatOnWhatsApp || 'Chat on WhatsApp'}</span>
                       </button>
                     </div>
                   </div>

@@ -157,14 +157,30 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
                 <MapPin className="w-4 h-4 text-[#C8102E] flex-shrink-0 mt-0.5" />
                 <span>{t.addressFull || "Bole Friendship Building 4th Floor, Office 408, Addis Ababa, Ethiopia"}</span>
               </li>
-              <li className="flex items-center gap-2.5 text-slate-300">
-                <Phone className="w-4 h-4 text-[#C8102E] flex-shrink-0" />
-                <div>
-                  <a href="tel:+251910136747" className="hover:text-[#C8102E] transition-colors">+251 910 136 747</a>
-                  <span className="text-slate-500 mx-1">|</span>
-                  <a href="tel:+251956585555" className="hover:text-[#C8102E] transition-colors">+251 956 585 555</a>
-                  <span className="text-slate-500 mx-1">|</span>
-                  <a href="tel:+251956595555" className="hover:text-[#C8102E] transition-colors">+251 956 595 555</a>
+              <li className="flex items-start gap-2.5 text-slate-300">
+                <Phone className="w-4 h-4 text-[#C8102E] flex-shrink-0 mt-0.5" />
+                <div className="flex flex-col gap-1 text-slate-300">
+                  <a 
+                    href="tel:+251910136747" 
+                    dir="ltr"
+                    className="whitespace-nowrap hover:text-[#C8102E] transition-colors inline-block text-start"
+                  >
+                    +251 91 013 6747
+                  </a>
+                  <a 
+                    href="tel:+251956585555" 
+                    dir="ltr"
+                    className="whitespace-nowrap hover:text-[#C8102E] transition-colors inline-block text-start"
+                  >
+                    +251 95 658 5555
+                  </a>
+                  <a 
+                    href="tel:+251956595555" 
+                    dir="ltr"
+                    className="whitespace-nowrap hover:text-[#C8102E] transition-colors inline-block text-start"
+                  >
+                    +251 95 659 5555
+                  </a>
                 </div>
               </li>
               <li className="flex items-center gap-2.5 text-slate-300">
@@ -244,9 +260,9 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
 
         {/* Bottom Footer */}
         <div className="pt-6 flex flex-col items-center justify-center gap-3 text-sm text-slate-400 text-center">
-  <p>
-    © {new Date().getFullYear()} Delta Travel & Tour. {t.allRightsReserved || 'All rights reserved.'}
-  </p>
+          <p>
+            {t.allRightsReserved || `© ${new Date().getFullYear()} Delta Travel & Tour. All Rights Reserved.`}
+          </p>
 </div>
       </div>
     </footer>

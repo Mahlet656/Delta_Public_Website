@@ -5,7 +5,7 @@ import {
   PackageItem, 
   SmsSubscriber 
 } from './types';
-import { fetchPackages } from './api/client';
+import { fetchPackages, subscribeSms } from './api/client';
 import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
 
 import { Header } from './components/Header';
@@ -21,7 +21,7 @@ import { Gallery } from './pages/Gallery';
 import { Contact } from './pages/Contact';
 
 function MainLayout() {
-  const { language, setLanguage, isRtl, dir, currentOption } = useLanguage();
+  const { language, setLanguage, isRtl, dir, currentOption, t } = useLanguage();
   const [activePage, setActivePage] = useState<PageId>('home');
   const [currency, setCurrency] = useState<Currency>('USD');
 
@@ -39,15 +39,15 @@ function MainLayout() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activePage]);
 
-  // Load packages from backend on mount
+  // Load packages from backend on mount and whenever language changes
   useEffect(() => {
     loadPackages();
-  }, []);
+  }, [language]);
 
   const loadPackages = async () => {
     setLoading(true);
     try {
-      const data = await fetchPackages();
+      const data = await fetchPackages(undefined, language);
       setPackages(data);
     } catch (error) {
       console.error('Failed to load packages:', error);
@@ -79,15 +79,18 @@ function MainLayout() {
           id: `sub-${Date.now()}`,
           phone,
           channel: 'Web Lead Banner',
+          language,
           subscribedAt: new Date().toISOString().split('T')[0]
         },
         ...prev
       ]);
     }
 
+    subscribeSms({ phone, channel: 'Web Lead Banner', language }, language);
+
     triggerSmsToast(
       phone,
-      "DELTA TRAVEL: Welcome to Delta SMS Alerts! You'll receive instant Umrah package and departure updates."
+      t('smsAlertsWelcome', "DELTA TRAVEL: Welcome to Delta SMS Alerts! You'll receive instant Umrah package and departure updates.")
     );
   };
 

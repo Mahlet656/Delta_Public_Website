@@ -38,7 +38,7 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
       console.log('📥 Team members loaded:', data);
       setTeamMembers(data);
     } catch (err) {
-      setError('Failed to load team members. Please refresh the page.');
+      setError(t.errorLoadingTeam || 'Failed to load team members. Please refresh the page.');
       console.error('Error loading team members:', err);
     } finally {
       setLoading(false);
@@ -152,28 +152,38 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
                 const imageUrl = getFullImageUrl(member.imageUrl);
                 console.log(`🖼️ Team member image URL: ${imageUrl}`);
                 
+                const name = ((lang || '').toUpperCase() === 'AR' && member.nameAr)
+                  ? member.nameAr
+                  : (((lang || '').toUpperCase() === 'AM' && member.nameAm) ? member.nameAm : (member.nameEn || member.name));
+                const role = ((lang || '').toUpperCase() === 'AR' && member.roleAr)
+                  ? member.roleAr
+                  : (((lang || '').toUpperCase() === 'AM' && member.roleAm) ? member.roleAm : (member.roleEn || member.role));
+                const bio = ((lang || '').toUpperCase() === 'AR' && member.bioAr)
+                  ? member.bioAr
+                  : (((lang || '').toUpperCase() === 'AM' && member.bioAm) ? member.bioAm : (member.bioEn || member.bio));
+
                 return (
-                  <div 
-                    key={member.id} 
-                    className="bg-slate-50 rounded-xl p-6 shadow-sm border border-slate-200 text-center space-y-3 transition-all hover:shadow-md hover:border-[#C8102E]/30"
-                  >
-                    <img 
-                      src={imageUrl} 
-                      alt={member.name} 
-                      className="w-20 h-20 rounded-full mx-auto object-cover border-2 border-red-600 shadow-sm"
-                      onError={(e) => {
-                        console.error(`❌ Failed to load image: ${imageUrl}`);
-                        (e.target as HTMLImageElement).src = 'https://via.placeholder.com/80x80/cccccc/666666?text=?';
-                      }}
-                    />
-                    <div>
-                      <h3 className="font-bold text-slate-900 text-sm">{member.name}</h3>
-                      <p className="text-xs text-[#C8102E] font-bold">{member.role}</p>
-                    </div>
-                    <p className="text-xs text-slate-600">{member.bio}</p>
-                  </div>
-                );
-              })}
+                        <div 
+                          key={member.id} 
+                          className="bg-slate-50 rounded-xl p-6 shadow-sm border border-slate-200 text-center space-y-3 transition-all hover:shadow-md hover:border-[#C8102E]/30"
+                        >
+                          <img 
+                            src={imageUrl} 
+                            alt={name} 
+                            className="w-20 h-20 rounded-full mx-auto object-cover border-2 border-red-600 shadow-sm"
+                            onError={(e) => {
+                              console.error(`❌ Failed to load image: ${imageUrl}`);
+                              (e.target as HTMLImageElement).src = 'https://via.placeholder.com/80x80/cccccc/666666?text=?';
+                            }}
+                          />
+                          <div>
+                            <h3 className="font-bold text-slate-900 text-sm">{name}</h3>
+                            <p className="text-xs text-[#C8102E] font-bold">{role}</p>
+                          </div>
+                          <p className="text-xs text-slate-600">{bio}</p>
+                        </div>
+                      );
+                    })}
             </div>
           )}
         </div>

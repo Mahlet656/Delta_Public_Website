@@ -1,6 +1,7 @@
 import React from 'react';
 import { MessageSquare, CheckCircle, Smartphone, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useTranslation } from '../i18n/LanguageContext';
 
 interface SmsToastNotifierProps {
   toast: {
@@ -12,6 +13,8 @@ interface SmsToastNotifierProps {
 }
 
 export const SmsToastNotifier: React.FC<SmsToastNotifierProps> = ({ toast, onClose }) => {
+  const { t } = useTranslation();
+
   return (
     <AnimatePresence>
       {toast && (
@@ -29,13 +32,13 @@ export const SmsToastNotifier: React.FC<SmsToastNotifierProps> = ({ toast, onClo
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-1">
               <span className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1">
-                <MessageSquare className="w-3.5 h-3.5" /> SMS Notification Sent
+                <MessageSquare className="w-3.5 h-3.5" /> {t('smsNotificationSent', 'SMS Notification Sent')}
               </span>
-              <span className="text-[10px] text-slate-400">Just Now</span>
+              <span className="text-[10px] text-slate-400">{t('justNow', 'Just Now')}</span>
             </div>
             
             <p className="text-xs font-medium text-slate-200 mb-1">
-              To: <span className="font-semibold text-emerald-400">{toast.phone}</span>
+              {t('toLabel', 'To:')} <span dir="ltr" className="font-semibold text-emerald-400 whitespace-nowrap inline-block">{toast.phone}</span>
             </p>
             
             <p className="text-xs text-slate-300 bg-slate-800/80 p-2 rounded-lg border border-slate-700/50 leading-relaxed font-mono">
@@ -43,14 +46,14 @@ export const SmsToastNotifier: React.FC<SmsToastNotifierProps> = ({ toast, onClo
             </p>
 
             <div className="mt-2 flex items-center text-[11px] text-emerald-400 font-medium gap-1">
-              <CheckCircle className="w-3.5 h-3.5" /> Delivered via Delta Bulk SMS Gateway
+              <CheckCircle className="w-3.5 h-3.5" /> {t('deliveredViaGateway', 'Delivered via Delta Bulk SMS Gateway')}
             </div>
           </div>
 
           <button
             onClick={onClose}
             className="text-slate-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-slate-800"
-            title="Dismiss notification"
+            title={t('dismiss', 'Dismiss notification')}
           >
             <X className="w-4 h-4" />
           </button>
