@@ -13,7 +13,7 @@ export const PageBanner: React.FC<PageBannerProps> = ({
   title, 
   subtitle, 
   className = '',
-  backgroundImage = '/background/bp3.jpg'
+  backgroundImage = '/background/bg3.jpg'
 }) => {
   return (
     <section className={`relative bg-[#0b0f19] text-white py-16 px-4 text-center overflow-hidden border-b border-slate-800 min-h-[280px] flex items-center ${className}`}>

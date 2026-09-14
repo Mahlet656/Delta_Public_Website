@@ -8,7 +8,6 @@ import {
   Youtube, 
   Twitter, 
   Send,
-  DollarSign,
   Linkedin,
   Send as SendIcon
 } from 'lucide-react';
@@ -17,6 +16,7 @@ import { translations } from '../translations';
 import { Logo } from './Logo';
 import { getPublicSocialLinksApi } from '../api/socialLinks';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { CurrencySwitcher } from './CurrencySwitcher';
 import { useLanguage } from '../i18n/LanguageContext';
 
 interface HeaderProps {
@@ -113,19 +113,7 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="text-slate-700">|</span>
 
             {/* Currency Selector ($ USD / ETB / SAR) */}
-            <div className="flex items-center gap-1 bg-slate-900 border border-slate-700 rounded px-2 py-0.5">
-              <DollarSign className="w-3 h-3 text-red-400" />
-              <select
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value as Currency)}
-                className="bg-transparent text-white font-bold text-[11px] focus:outline-none cursor-pointer"
-                title="Select Currency"
-              >
-                <option value="USD" className="bg-slate-900 text-white">$ USD</option>
-                <option value="ETB" className="bg-slate-900 text-white">ETB (ብር)</option>
-                <option value="SAR" className="bg-slate-900 text-white">SAR (﷼)</option>
-              </select>
-            </div>
+            <CurrencySwitcher currency={currency} setCurrency={setCurrency} />
 
             <span className="text-slate-700">|</span>
 

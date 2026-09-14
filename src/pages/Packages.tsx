@@ -60,14 +60,6 @@ export const Packages: React.FC<PackagesProps> = ({
       return 0;
     });
 
-  if (packages.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-20 text-slate-500 space-y-3">
-        <p className="text-sm font-semibold">{t.noPackagesAtMoment || "No packages available at the moment."}</p>
-      </div>
-    );
-  }
-
   const getDisplayPrice = (pkg: PackageItem) => {
     const priceUsd = pkg.priceUsd ?? pkg.price;
     const priceEtb = pkg.priceEtb;

@@ -25,7 +25,6 @@ export const Logo: React.FC<LogoProps> = ({
   const logoMap = {
     header: '/logo/logo1.png',
     hero: '/logo/logo1.png',
-    footer: '/logo/logo1.png',
     default: '/logo/logo1.png'
   };
 
