@@ -16,7 +16,6 @@ import {
   Globe
 } from 'lucide-react';
 import { translations } from '../translations';
-import { Logo } from './Logo';
 
 interface FooterProps {
   setActivePage: (page: PageId) => void;
@@ -84,18 +83,21 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
           
           {/* Column 1: Brand & About - Using Logo component */}
           <div className="space-y-4">
-            <Logo 
-              brandName={t.brandName || "DELTA"} 
-              brandSubtitle={t.brandSubtitle || "Travel & Tour"} 
-              variant="dark"
-              logoVariant="footer"
-              size="md"
-              className="!flex-col !items-start !gap-1" // Override to stack vertically
-            />
-            <p className="text-xs text-slate-300 leading-relaxed max-w-xs">
-              {t.footerDescription || 'Providing reliable, comfortable, and high-quality Umrah travel services with professionalism, care, and respect.'}
-            </p>
-          </div>
+  <div className="flex items-center gap-2">
+    <div className="w-1.5 h-8 bg-[#C8102E] rounded-full" />
+    <div>
+      <h3 className="text-white font-extrabold text-base tracking-tight">
+        {t.brandName || "Delta Travel & Tour"}
+      </h3>
+      <p className="text-[10px] text-[#FC8181] uppercase font-bold tracking-wider">
+        {t.brandSubtitle || "Licensed Umrah Service Agency"}
+      </p>
+    </div>
+  </div>
+  <p className="text-xs text-slate-300 leading-relaxed max-w-xs">
+    {t.footerDescription || 'Providing reliable, comfortable, and high-quality Umrah travel services with professionalism, care, and respect.'}
+  </p>
+</div>
 
           {/* Column 2: Quick Links */}
           <div className="space-y-4">
