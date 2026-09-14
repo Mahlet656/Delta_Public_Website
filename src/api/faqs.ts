@@ -6,7 +6,7 @@ export async function getFaqsApi(): Promise<FAQItem[]> {
   try {
     const res = await api.get('/faqs');
     // Backend returns { status, success, count, data: [...] }
-    return res?.data || [];
+    return (res as any)?.data || [];
   } catch (error) {
     console.error('❌ Error fetching FAQs:', error);
     return [];

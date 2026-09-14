@@ -145,6 +145,7 @@ const FALLBACK_TESTIMONIALS: Testimonial[] = [
     rating: 5,
     text: 'An unforgettable spiritual journey! Delta Travel made our Umrah experience seamless and stress-free.',
     textAr: 'رحلة روحية لا تنسى! جعلت دلتا ترافيل تجربة العمرة لدينا سلسة وخالية من الإجهاد.',
+    textAm: 'የማይረሳ መንፈሳዊ ጉዞ! ዴልታ ትራቭል የኡምራ ቆይታችንን የተሳካ እና ከጭንቀት ነፃ አድርጎልናል።',
     date: '2026-01-15',
     isActive: true,
     createdAt: new Date().toISOString(),
@@ -157,6 +158,7 @@ const FALLBACK_TESTIMONIALS: Testimonial[] = [
     rating: 5,
     text: 'The best travel agency for Umrah! Everything was perfectly organized from flights to accommodations.',
     textAr: 'أفضل وكالة سفر للعمرة! كل شيء كان منظمًا بشكل مثالي من الرحلات إلى الإقامة.',
+    textAm: 'ለኡምራ ጉዞ ምርጡ የጉዞ ወኪል! ከበረራ ጀምሮ እስከ ማረፊያ ድረስ ሁሉም ነገር በሚገባ የተደራጀ ነበር።',
     date: '2026-01-20',
     isActive: true,
     createdAt: new Date().toISOString(),
@@ -169,6 +171,7 @@ const FALLBACK_TESTIMONIALS: Testimonial[] = [
     rating: 5,
     text: 'I highly recommend Delta Travel for anyone planning Umrah. The team was professional and responsive.',
     textAr: 'أنصح بشدة دلتا ترافيل لأي شخص يخطط للعمرة. كان الفريق محترفًا ومستجيبًا.',
+    textAm: 'ለኡምራ እቅድ ላለው ማንኛውም ሰው ዴልታ ትራቭልን አጥብቄ እመክራለሁ። ቡድኑ ሙያዊ እና ፈጣን ምላሽ ሰጪ ነበር።',
     date: '2026-02-01',
     isActive: true,
     createdAt: new Date().toISOString(),
@@ -203,7 +206,7 @@ export const Home: React.FC<HomeProps> = ({
       console.log('🔄 Loading home data...');
       
       const [pkgData, galData, testimonialData] = await Promise.all([
-        fetchPackages(),
+        fetchPackages(undefined, lang),
         fetchGalleryItems('all'),
         getPublicTestimonialsApi().catch((err) => {
           console.error('❌ Testimonials API error:', err);
@@ -235,7 +238,7 @@ export const Home: React.FC<HomeProps> = ({
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [lang]);
 
   // Load data on mount
   useEffect(() => {
@@ -426,11 +429,11 @@ export const Home: React.FC<HomeProps> = ({
             <div className="pt-4 flex items-center gap-6 text-white/70">
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
-                <span className="text-xs font-medium">Trusted by 25,000+ Pilgrims</span>
+                <span className="text-xs font-medium">{t.trustedBy}</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[#C8102E] text-sm font-bold">★</span>
-                <span className="text-xs font-medium">4.9/5 Rating</span>
+                <span className="text-xs font-medium">{t.rating}</span>
               </div>
             </div>
           </div>
@@ -548,13 +551,13 @@ export const Home: React.FC<HomeProps> = ({
 
                   <div className="p-4 space-y-3">
                     <h3 className="font-bold text-sm text-slate-900 leading-snug">
-                      {lang === 'AR' ? pkg.titleAr : (lang === 'AM' && pkg.titleAm) ? pkg.titleAm : pkg.titleEn}
+                      {((lang || '').toUpperCase() === 'AR') ? pkg.titleAr : (((lang || '').toUpperCase() === 'AM') && pkg.titleAm) ? pkg.titleAm : pkg.titleEn}
                     </h3>
 
                     <div className="flex items-center gap-4 text-xs text-slate-900 font-medium">
                       <span className="flex items-center gap-1">
                         <Clock className="w-3.5 h-3.5 text-slate-400" />
-                        <span>{pkg.durationDays} Days</span>
+                        <span>{pkg.durationDays} {t.daysLabel || 'Days'}</span>
                       </span>
                     </div>
 
@@ -567,23 +570,31 @@ export const Home: React.FC<HomeProps> = ({
   </div>
   {hasDiscounts && (
     <div className="mt-2 space-y-1">
-      {pkg.discounts?.filter(d => d.isActive !== false).map((discount, idx) => (
-        <div key={idx} className="text-sm font-semibold text-emerald-600">
-          {discount.label}: {discount.type === 'percentage' ? `${discount.value}% off` : `$${discount.value} off`}
-         {/* {discount.description && ` (${discount.description})`}  */}
-          {discount.minPersons && ` (${discount.minPersons}+ Persons)`}
-          {discount.ageGroup && ` (Age: ${discount.ageGroup})`}
-          {/* Handle ageMin/ageMax for "Ages" display */}
-          {discount.ageMin !== undefined && discount.ageMin !== null && 
-           discount.ageMax !== undefined && discount.ageMax !== null && (
-            ` (Ages ${discount.ageMin}-${discount.ageMax})`
-          )}
-          {discount.ageMin !== undefined && discount.ageMin !== null && 
-           (discount.ageMax === undefined || discount.ageMax === null) && (
-            ` (Ages ${discount.ageMin}+)`
-          )}
-        </div>
-      ))}
+      {pkg.discounts?.filter(d => d.isActive !== false).map((discount, idx) => {
+        const discountLabel = ((lang || '').toUpperCase() === 'AR' && discount.labelAr)
+          ? discount.labelAr
+          : (((lang || '').toUpperCase() === 'AM' && discount.labelAm) ? discount.labelAm : discount.label);
+        const ageGroup = ((lang || '').toUpperCase() === 'AR' && discount.ageGroupAr)
+          ? discount.ageGroupAr
+          : (((lang || '').toUpperCase() === 'AM' && discount.ageGroupAm) ? discount.ageGroupAm : discount.ageGroup);
+
+        return (
+          <div key={idx} className="text-sm font-semibold text-emerald-600">
+            {discountLabel}: {discount.type === 'percentage' ? `${discount.value}% ${t.offLabel || 'off'}` : `$${discount.value} ${t.offLabel || 'off'}`}
+            {discount.minPersons && ` (${discount.minPersons}+ ${t.personsLabel || 'Persons'})`}
+            {discount.ageGroup && ` (${t.ageLabel || 'Age:'} ${ageGroup})`}
+            {/* Handle ageMin/ageMax for "Ages" display */}
+            {discount.ageMin !== undefined && discount.ageMin !== null && 
+             discount.ageMax !== undefined && discount.ageMax !== null && (
+              ` (${t.ageLabel || 'Age:'} ${discount.ageMin}-${discount.ageMax})`
+            )}
+            {discount.ageMin !== undefined && discount.ageMin !== null && 
+             (discount.ageMax === undefined || discount.ageMax === null) && (
+              ` (${t.ageLabel || 'Age:'} ${discount.ageMin}+)`
+            )}
+          </div>
+        );
+      })}
     </div>
   )}
 </div>
@@ -730,9 +741,9 @@ export const Home: React.FC<HomeProps> = ({
             </div>
             <h3 className="font-bold text-slate-900 text-sm">{t.ourLocation}</h3>
             <p className="text-sm text-slate-600">
-              Bole Friendship Building, 4th Floor, Office 408
+              {t.addressBuilding || "Bole Friendship Building, 4th Floor, Office 408"}
               <br />
-              Addis Ababa, Ethiopia
+              {t.addressCity || "Addis Ababa, Ethiopia"}
             </p>
           </div>
 
@@ -742,9 +753,9 @@ export const Home: React.FC<HomeProps> = ({
             </div>
             <h3 className="font-bold text-slate-900 text-sm">{t.officeHours}</h3>
             <p className="text-sm text-slate-600">
-              <span className="font-semibold">Monday – Saturday:</span> 2:30 AM – 11:30 PM LT
+              <span className="font-semibold">{t.monToSatLabel || "Monday – Saturday:"}</span> {t.monToSatTime || "2:30 AM – 11:30 PM LT"}
               <br />
-              <span className="font-semibold">Sunday & Holidays:</span> On-call WhatsApp Assistance
+              <span className="font-semibold">{t.sunAndHolidaysLabel || "Sunday & Holidays:"}</span> {t.sunAndHolidaysDesc || "On-call WhatsApp Assistance"}
             </p>
           </div>
 
@@ -757,15 +768,15 @@ export const Home: React.FC<HomeProps> = ({
     <div className="space-y-1.5">
       <p className="flex items-center gap-2">
         <Phone className="w-4 h-4 text-[#C8102E] flex-shrink-0" />
-        <a href="tel:+251910136747" className="hover:text-[#C8102E] transition-colors">+251 91 013 6747</a>
+        <a href="tel:+251910136747" dir="ltr" className="whitespace-nowrap hover:text-[#C8102E] transition-colors">+251 91 013 6747</a>
       </p>
       <p className="flex items-center gap-2">
         <Phone className="w-4 h-4 text-[#C8102E] flex-shrink-0" />
-        <a href="tel:+251956585555" className="hover:text-[#C8102E] transition-colors">+251 95 658 5555</a>
+        <a href="tel:+251956585555" dir="ltr" className="whitespace-nowrap hover:text-[#C8102E] transition-colors">+251 95 658 5555</a>
       </p>
       <p className="flex items-center gap-2">
         <Phone className="w-4 h-4 text-[#C8102E] flex-shrink-0" />
-        <a href="tel:+251956595555" className="hover:text-[#C8102E] transition-colors">+251 95 659 5555</a>
+        <a href="tel:+251956595555" dir="ltr" className="whitespace-nowrap hover:text-[#C8102E] transition-colors">+251 95 659 5555</a>
       </p>
     </div>
     <p className="flex items-center gap-2 pt-1 border-t border-slate-100">
@@ -944,15 +955,23 @@ export const Home: React.FC<HomeProps> = ({
             {currentReview && (
               <>
                 <p className="text-xs text-slate-600 italic leading-relaxed">
-                  "{lang === 'AR' ? (currentReview.textAr || currentReview.text) : currentReview.text}"
+                  "{(lang || '').toUpperCase() === 'AR' 
+                    ? (currentReview.textAr || currentReview.text) 
+                    : (lang || '').toUpperCase() === 'AM' 
+                    ? (currentReview.textAm || currentReview.text) 
+                    : currentReview.text}"
                 </p>
                 <div className="flex items-center gap-0.5 text-red-500 pt-1">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className={`w-3.5 h-3.5 ${i < (currentReview.rating || 5) ? 'fill-red-500 text-red-500' : 'fill-slate-200 text-slate-200'}`} />
                   ))}
                 </div>
-                <p className="text-[11px] font-bold text-slate-900">- {currentReview.name}</p>
-                <p className="text-[10px] text-slate-500">{currentReview.location || 'Delta Travel'}</p>
+                <p className="text-[11px] font-bold text-slate-900">
+                  - {((lang || '').toUpperCase() === 'AR' && currentReview.nameAr) ? currentReview.nameAr : (((lang || '').toUpperCase() === 'AM' && currentReview.nameAm) ? currentReview.nameAm : currentReview.name)}
+                </p>
+                <p className="text-[10px] text-slate-500">
+                  {((lang || '').toUpperCase() === 'AR' && currentReview.locationAr) ? currentReview.locationAr : (((lang || '').toUpperCase() === 'AM' && currentReview.locationAm) ? currentReview.locationAm : (currentReview.location || 'Delta Travel'))}
+                </p>
               </>
             )}
             <div className="flex items-center justify-between pt-2">

@@ -1,5 +1,15 @@
 // src/types.ts
-export type Language = 'EN' | 'AR' | 'AM';
+export type StandardLanguage = 'en' | 'am' | 'ar';
+export type Language = 'en' | 'am' | 'ar' | 'EN' | 'AM' | 'AR';
+
+export interface LanguageOption {
+  code: StandardLanguage;
+  label: string;
+  nativeLabel: string;
+  dir: 'ltr' | 'rtl';
+  flag: string;
+  fontClass: string;
+}
 
 export type Currency = 'USD' | 'ETB' | 'SAR';
 
@@ -9,12 +19,8 @@ export type PageId =
   | 'packages' 
   | 'hotels-flights' 
   | 'gallery' 
-<<<<<<< HEAD
   | 'faqs'
-  | 'office' 
-=======
-  | 'faqs'  
->>>>>>> 92dfad2bcb1bc4a01ca92195b7057a11bf89c73d
+  | 'office'
   | 'contact';
 
 export type PackageCategory = 'Economy' | 'Standard' | 'Premium' | 'VIP';
@@ -26,7 +32,11 @@ export interface ItineraryDay {
   title: string;
   description: string;
   titleEn?: string;
+  titleAr?: string;
+  titleAm?: string;
   descriptionEn?: string;
+  descriptionAr?: string;
+  descriptionAm?: string;
 }
 
 // Discount structure
@@ -38,31 +48,35 @@ export interface Discount {
   discountedPriceEtb?: number;
   discountedPriceSar?: number;
   label: string;
+  labelEn?: string;
   labelAr?: string;
+  labelAm?: string;
   description?: string;
+  descriptionEn?: string;
+  descriptionAr?: string;
+  descriptionAm?: string;
   minPersons?: number;
   maxPersons?: number;
   ageGroup?: string;
+  ageGroupEn?: string;
+  ageGroupAr?: string;
+  ageGroupAm?: string;
   ageMin?: number;
   ageMax?: number;
   discountType: 'age' | 'group' | 'general';
   isActive: boolean;
 }
 
-export interface ItineraryDay {
-  dayNumber: number;
-  title: string;
-  description: string;
-  titleEn?: string;
-  descriptionEn?: string;
-}
-
 export interface PackageItem {
   id: string;
+  title?: string;
   titleEn: string;
   titleAr: string;
   titleAm?: string;
   category: PackageCategory;
+  categoryEn?: string;
+  categoryAr?: string;
+  categoryAm?: string;
   price: number;
   priceUsd?: number;
   priceEtb?: number;
@@ -84,8 +98,17 @@ export interface PackageItem {
   
   durationDays: number;
   departureCity: string;
+  departureCityEn?: string;
+  departureCityAr?: string;
+  departureCityAm?: string;
   inclusions: string[];
+  inclusionsEn?: string[];
+  inclusionsAr?: string[];
+  inclusionsAm?: string[];
   exclusions?: string[];
+  exclusionsEn?: string[];
+  exclusionsAr?: string[];
+  exclusionsAm?: string[];
   rating: number;
   reviewsCount: number;
   featured?: boolean;
@@ -104,7 +127,14 @@ export interface PackageItem {
 export interface FAQItem {
   id: string;
   question: string;  
-  answer: string;    
+  answer: string;
+  questionEn?: string;
+  questionAr?: string;
+  questionAm?: string;
+  answerEn?: string;
+  answerAr?: string;
+  answerAm?: string;
+  category?: string;
 }
 
 // Package FAQ 
@@ -125,8 +155,17 @@ export interface SocialLink {
 export interface TeamMember {
   id: string;
   name: string;
+  nameEn?: string;
+  nameAr?: string;
+  nameAm?: string;
   role: string;
+  roleEn?: string;
+  roleAr?: string;
+  roleAm?: string;
   bio: string;
+  bioEn?: string;
+  bioAr?: string;
+  bioAm?: string;
   imageUrl: string;
   order: number;
   isActive: boolean;
@@ -137,9 +176,11 @@ export interface TeamMember {
 export interface SmsSubscriber {
   id?: string;
   phone: string;
+  name?: string;
   email?: string;
   channel?: string;
   packageInterestId?: string;
+  language?: StandardLanguage | string;
   subscribedAt?: string;
 }
 
@@ -150,19 +191,27 @@ export interface InquiryForm {
   subject: string;
   message: string;
   source?: string;
+  language?: StandardLanguage | string;
 }
 
 export interface GalleryItem {
   id: string;
   titleEn: string;
-  titleAr: string;
+  titleAr?: string;
+  titleAm?: string;
   type: 'photo' | 'video';
   imageUrl: string;
   thumbnailUrl?: string;
   videoUrl?: string;
   duration?: string;
   location: string;
+  locationEn?: string;
+  locationAr?: string;
+  locationAm?: string;
   description: string;
+  descriptionEn?: string;
+  descriptionAr?: string;
+  descriptionAm?: string;
   isActive?: boolean;
   sortOrder?: number;
   uploadDate?: string;
@@ -184,12 +233,25 @@ export interface OfficeImage {
 export interface Testimonial {
   id: string;
   name: string;
+  nameEn?: string;
+  nameAr?: string;
+  nameAm?: string;
   location: string;
+  locationEn?: string;
+  locationAr?: string;
+  locationAm?: string;
   rating: number;
   text: string;
+  textEn?: string;
   textAr?: string;
+  textAm?: string;
   date: string;
+  packageTaken?: string;
+  packageTakenEn?: string;
+  packageTakenAr?: string;
+  packageTakenAm?: string;
+  avatar?: string;
   isActive?: boolean;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }

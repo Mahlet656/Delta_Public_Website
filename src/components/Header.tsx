@@ -16,6 +16,8 @@ import { Currency, Language, PageId, SocialLink } from '../types';
 import { translations } from '../translations';
 import { Logo } from './Logo';
 import { getPublicSocialLinksApi } from '../api/socialLinks';
+import { LanguageSwitcher } from './LanguageSwitcher';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface HeaderProps {
   activePage: PageId;
@@ -127,20 +129,8 @@ export const Header: React.FC<HeaderProps> = ({
 
             <span className="text-slate-700">|</span>
 
-            {/* Language Selector (EN / AR / AM) */}
-            <div className="flex items-center gap-1 bg-slate-900 border border-slate-700 rounded px-2 py-0.5">
-              <Globe className="w-3 h-3 text-red-500" />
-              <select
-                value={lang}
-                onChange={(e) => handleLanguageChange(e.target.value as Language)}
-                className="bg-transparent text-white font-bold text-[11px] focus:outline-none cursor-pointer"
-                title="Select Language"
-              >
-                <option value="EN" className="bg-slate-900 text-white">English (EN)</option>
-                <option value="AR" className="bg-slate-900 text-white">العربية (AR)</option>
-                <option value="AM" className="bg-slate-900 text-white">አማርኛ (AM)</option>
-              </select>
-            </div>
+            {/* Language Selector Dropdown (English, Amharic, Arabic) */}
+            <LanguageSwitcher variant="dropdown" theme="dark" />
 
             <span className="text-slate-700 hidden sm:inline">|</span>
 
@@ -246,7 +236,15 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
             ))}
 
-            <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
+            {/* Mobile Language Switcher */}
+            <div className="pt-3 pb-1 border-t border-slate-100 flex flex-col gap-1.5">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                Language / ቋንቋ / اللغة
+              </span>
+              <LanguageSwitcher variant="toggle" className="w-full justify-between" />
+            </div>
+
+            <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
               <button
                 onClick={() => {
                   setActivePage('contact');

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Language, 
   Currency,
   PageId, 
   PackageItem, 
   SmsSubscriber 
 } from './types';
-import { fetchPackages } from './api/client';
+import { fetchPackages, subscribeSms } from './api/client';
+import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
 
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -20,9 +20,9 @@ import { Packages } from './pages/Packages';
 import { Gallery } from './pages/Gallery';
 import { Contact } from './pages/Contact';
 
-export default function App() {
+function MainLayout() {
+  const { language, setLanguage, isRtl, dir, currentOption, t } = useLanguage();
   const [activePage, setActivePage] = useState<PageId>('home');
-  const [lang, setLang] = useState<Language>('EN');
   const [currency, setCurrency] = useState<Currency>('USD');
 
   // Application Data States
@@ -39,15 +39,15 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activePage]);
 
-  // Load packages from backend on mount
+  // Load packages from backend on mount and whenever language changes
   useEffect(() => {
     loadPackages();
-  }, []);
+  }, [language]);
 
   const loadPackages = async () => {
     setLoading(true);
     try {
-      const data = await fetchPackages();
+      const data = await fetchPackages(undefined, language);
       setPackages(data);
     } catch (error) {
       console.error('Failed to load packages:', error);
@@ -79,57 +79,64 @@ export default function App() {
           id: `sub-${Date.now()}`,
           phone,
           channel: 'Web Lead Banner',
+          language,
           subscribedAt: new Date().toISOString().split('T')[0]
         },
         ...prev
       ]);
     }
 
+    subscribeSms({ phone, channel: 'Web Lead Banner', language }, language);
+
     triggerSmsToast(
       phone,
-      "DELTA TRAVEL: Welcome to Delta SMS Alerts! You'll receive instant Umrah package and departure updates."
+      t('smsAlertsWelcome', "DELTA TRAVEL: Welcome to Delta SMS Alerts! You'll receive instant Umrah package and departure updates.")
     );
   };
 
-  const fontClass = lang === 'AR' ? 'font-arabic' : lang === 'AM' ? 'font-amharic' : 'font-sans';
+  const fontClass = currentOption.fontClass;
 
- if (loading) {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F9F9F9]">
-      <div className="flex flex-col items-center gap-4">
-        {/* Logo with pulse animation */}
-        <div className="relative animate-pulse">
-          <div className="absolute -inset-4 rounded-full bg-[#C8102E]/10 animate-ping" />
-          <img 
-            src="/logo/logo.jpg" 
-            alt="Delta Travel & Tour" 
-            className="w-20 h-20 rounded-full object-cover relative z-10 border-2 border-[#C8102E] p-1 bg-white"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"%3E%3Crect width="80" height="80" fill="%23C8102E" rx="40"/%3E%3Ctext x="40" y="48" text-anchor="middle" dy=".3em" fill="white" font-size="28" font-family="sans-serif" font-weight="bold"%3EΔ%3C/text%3E%3C/svg%3E';
-            }}
-          />
-        </div>
-        
-        <div className="flex flex-col items-center gap-1">
-          <p className="text-sm font-semibold text-slate-700">Loading...</p>
-          <div className="w-32 h-1 bg-slate-200 rounded-full overflow-hidden">
-            <div className="h-full bg-[#C8102E] rounded-full animate-loading-bar" style={{ width: '60%' }} />
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F9F9F9]" dir={dir} lang={language}>
+        <div className="flex flex-col items-center gap-4">
+          {/* Logo with pulse animation */}
+          <div className="relative animate-pulse">
+            <div className="absolute -inset-4 rounded-full bg-[#C8102E]/10 animate-ping" />
+            <img 
+              src="/logo/logo.jpg" 
+              alt="Delta Travel & Tour" 
+              className="w-20 h-20 rounded-full object-cover relative z-10 border-2 border-[#C8102E] p-1 bg-white"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"%3E%3Crect width="80" height="80" fill="%23C8102E" rx="40"/%3E%3Ctext x="40" y="48" text-anchor="middle" dy=".3em" fill="white" font-size="28" font-family="sans-serif" font-weight="bold"%3EΔ%3C/text%3E%3C/svg%3E';
+              }}
+            />
+          </div>
+          
+          <div className="flex flex-col items-center gap-1">
+            <p className="text-sm font-semibold text-slate-700">Loading...</p>
+            <div className="w-32 h-1 bg-slate-200 rounded-full overflow-hidden">
+              <div className="h-full bg-[#C8102E] rounded-full animate-loading-bar" style={{ width: '60%' }} />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   return (
-    <div className={`min-h-screen flex flex-col bg-[#F9F9F9] text-slate-800 ${fontClass}`} dir={lang === 'AR' ? 'rtl' : 'ltr'}>
+    <div 
+      className={`min-h-screen flex flex-col bg-[#F9F9F9] text-slate-800 ${fontClass} transition-colors duration-200`} 
+      dir={dir}
+      lang={language}
+    >
       
       {/* Global Header */}
       <Header
         activePage={activePage}
         setActivePage={setActivePage}
-        lang={lang}
-        setLang={setLang}
+        lang={language}
+        setLang={setLanguage}
         currency={currency}
         setCurrency={setCurrency}
       />
@@ -141,37 +148,41 @@ export default function App() {
             setActivePage={setActivePage}
             onSelectPackage={(pkg) => setSelectedPkgModal(pkg)}
             onSubscribeSms={handleSubscribeSms}
-            lang={lang}
+            lang={language}
             currency={currency}
           />
         )}
 
         {activePage === 'about' && (
-          <About setActivePage={setActivePage} lang={lang} />
+          <About setActivePage={setActivePage} lang={language} />
         )}
 
         {activePage === 'packages' && (
           <Packages
             packages={packages}
             onSelectPackage={(pkg) => setSelectedPkgModal(pkg)}
-            lang={lang}
+            lang={language}
             currency={currency}
           />
         )}
 
-
         {activePage === 'gallery' && (
-          <Gallery lang={lang} />
+          <Gallery lang={language} />
         )}
 
         {activePage === 'contact' && (
-          <Contact onTriggerSmsToast={triggerSmsToast} lang={lang} />
+          <Contact 
+            setActivePage={setActivePage} 
+            currency={currency} 
+            onTriggerSmsToast={triggerSmsToast} 
+            lang={language} 
+          />
         )}
 
       </main>
 
       {/* Global Footer */}
-      <Footer setActivePage={setActivePage} lang={lang} />
+      <Footer setActivePage={setActivePage} lang={language} />
 
       {/* Floating WhatsApp Chat Launcher */}
       <FloatingWhatsApp />
@@ -186,10 +197,18 @@ export default function App() {
       <PackageDetailModal
         pkg={selectedPkgModal}
         onClose={() => setSelectedPkgModal(null)}
-        lang={lang}
+        lang={language}
         currency={currency}
       />
 
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <LanguageProvider>
+      <MainLayout />
+    </LanguageProvider>
   );
 }

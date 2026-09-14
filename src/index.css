@@ -18,9 +18,9 @@
   --text-muted: #6B7280;
   
   /* ===== FONTS ===== */
-  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
-  --font-arabic: 'Amiri', serif;
-  --font-amharic: 'Noto Sans Ethiopic', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-arabic: 'Cairo', 'Noto Sans Arabic', 'Amiri', -apple-system, system-ui, sans-serif;
+  --font-amharic: 'Noto Sans Ethiopic', 'Nyala', system-ui, -apple-system, sans-serif;
   
   /* ===== FONT SIZES  ===== */
   --fs-base: 20px;        /* Base font size - change this to scale all fonts */
@@ -68,13 +68,19 @@ body {
   line-height: 1.6;
 }
 
-/* Amharic & Arabic typography helpers */
-.font-amharic {
+/* Amharic & Arabic typography helpers & auto-language rules */
+[lang="am"], [lang="am"] body, html[lang="am"], .font-amharic {
   font-family: var(--font-amharic);
+  letter-spacing: normal;
 }
 
-.font-arabic {
+[lang="ar"], [lang="ar"] body, html[lang="ar"], .font-arabic {
   font-family: var(--font-arabic);
+  letter-spacing: normal;
+}
+
+[lang="en"], [lang="en"] body, html[lang="en"], .font-sans {
+  font-family: var(--font-sans);
 }
 
 /* Font size utility classes for easy access */
@@ -152,6 +158,24 @@ body {
 
 /* ===== RTL Support ===== */
 [dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+}
+
+/* RTL layout helpers */
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] input[type="tel"],
+[dir="rtl"] input[type="number"],
+[dir="rtl"] input[type="email"] {
+  direction: ltr;
   text-align: right;
 }
 

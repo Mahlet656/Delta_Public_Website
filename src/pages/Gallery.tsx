@@ -86,7 +86,7 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
         });
       });
     } catch (e) {
-      setError('Failed to load gallery. Please refresh.');
+      setError(t.errorLoadingGallery || 'Failed to load gallery. Please refresh.');
       console.error(e);
     } finally {
       setLoading(false);
@@ -131,7 +131,7 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
         </div>
         
         <div className="flex flex-col items-center gap-2">
-          <p className="text-sm font-semibold text-slate-700">Loading Gallery...</p>
+          <p className="text-sm font-semibold text-slate-700">{t.loadingGallery || 'Loading Gallery...'}</p>
           <div className="flex items-center gap-1">
             <span className="w-2 h-2 bg-[#C8102E] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
             <span className="w-2 h-2 bg-[#C8102E] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -147,7 +147,7 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
     return (
       <div className="text-center py-16">
         <p className="text-red-600">{error}</p>
-        <button onClick={loadGallery} className="mt-4 text-[#C8102E] underline">Retry</button>
+        <button onClick={loadGallery} className="mt-4 text-[#C8102E] underline">{t.retry || "Retry"}</button>
       </div>
     );
   }
@@ -157,9 +157,9 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
       
       {/* Header Banner */}
        <PageBanner 
-        badge="Media Library"
-        title="Photo & Video Gallery"
-        subtitle="Explore holy sites and sacred moments from Makkah, Madinah, and Umrah journeys."
+        badge={t.mediaLibraryBadge || "Media Library"}
+        title={t.galleryPageTitle || "Photo & Video Gallery"}
+        subtitle={t.galleryPageSubtitle || "Explore holy sites and sacred moments from Makkah, Madinah, and Umrah journeys."}
         backgroundImage="/background/bg3.jpg"
       />
 
@@ -174,7 +174,7 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
                 : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
             }`}
           >
-            <span>All Media</span>
+            <span>{t.allMedia || "All Media"}</span>
           </button>
 
           <button
@@ -186,7 +186,7 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
             }`}
           >
             <ImageIcon className="w-4 h-4" />
-            <span>Photos</span>
+            <span>{t.photos || "Photos"}</span>
           </button>
 
           <button
@@ -198,7 +198,7 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
             }`}
           >
             <Film className="w-4 h-4" />
-            <span>Videos</span>
+            <span>{t.videos || "Videos"}</span>
           </button>
         </div>
       </section>
@@ -207,7 +207,7 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
       <section className="max-w-7xl mx-auto px-4 sm:px-8">
         {items.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 p-8 space-y-3">
-            <p className="text-slate-500 text-sm font-semibold">No gallery items found.</p>
+            <p className="text-slate-500 text-sm font-semibold">{t.noGalleryItems || "No gallery items found."}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -247,7 +247,7 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
                     {imageUrl ? (
                       <img
                         src={imageUrl}
-                        alt={lang === 'AR' ? (item.titleAr || item.titleEn) : item.titleEn}
+                        alt={(lang || '').toUpperCase() === 'AR' ? (item.titleAr || item.titleEn) : item.titleEn}
                         loading="lazy"
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         onError={(e) => {
@@ -286,16 +286,16 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
 
                     <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-slate-950/90 via-slate-950/60 to-transparent text-white transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-20">
                       <h3 className="font-bold text-sm text-white drop-shadow-sm mb-0.5">
-                        {lang === 'AR' ? (item.titleAr || item.titleEn) : item.titleEn}
+                        {((lang || '').toUpperCase() === 'AR' && item.titleAr) ? item.titleAr : (((lang || '').toUpperCase() === 'AM' && item.titleAm) ? item.titleAm : item.titleEn)}
                       </h3>
                       {item.location && (
                         <p className="text-[11px] text-slate-300 font-medium flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-red-400" /> {item.location}
+                          <MapPin className="w-3 h-3 text-red-400" /> {((lang || '').toUpperCase() === 'AR' && item.locationAr) ? item.locationAr : (((lang || '').toUpperCase() === 'AM' && item.locationAm) ? item.locationAm : item.location)}
                         </p>
                       )}
                       {item.description && (
                         <p className="text-[10px] text-slate-300 line-clamp-1 mt-1 font-normal opacity-90">
-                          {item.description}
+                          {((lang || '').toUpperCase() === 'AR' && item.descriptionAr) ? item.descriptionAr : (((lang || '').toUpperCase() === 'AM' && item.descriptionAm) ? item.descriptionAm : item.description)}
                         </p>
                       )}
                     </div>
@@ -395,10 +395,10 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
                 </div>
 
                 <h2 className="text-xl font-black text-white leading-snug">
-                  {lang === 'AR' ? (selectedItem.titleAr || selectedItem.titleEn) : selectedItem.titleEn}
+                  {((lang || '').toUpperCase() === 'AR' && selectedItem.titleAr) ? selectedItem.titleAr : (((lang || '').toUpperCase() === 'AM' && selectedItem.titleAm) ? selectedItem.titleAm : selectedItem.titleEn)}
                 </h2>
 
-                {selectedItem.titleAr && lang !== 'AR' && (
+                {selectedItem.titleAr && (lang || '').toUpperCase() !== 'AR' && (
                   <p className="text-xs text-amber-400 font-arabic font-bold" dir="rtl">
                     {selectedItem.titleAr}
                   </p>
@@ -406,13 +406,13 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
 
                 {selectedItem.location && (
                   <p className="text-xs text-slate-300 font-semibold flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4 text-red-400 flex-shrink-0" /> {selectedItem.location}
+                    <MapPin className="w-4 h-4 text-red-400 flex-shrink-0" /> {((lang || '').toUpperCase() === 'AR' && selectedItem.locationAr) ? selectedItem.locationAr : (((lang || '').toUpperCase() === 'AM' && selectedItem.locationAm) ? selectedItem.locationAm : selectedItem.location)}
                   </p>
                 )}
 
                 {selectedItem.description && (
                   <p className="text-xs text-slate-300 leading-relaxed pt-3 border-t border-slate-800">
-                    {selectedItem.description}
+                    {((lang || '').toUpperCase() === 'AR' && selectedItem.descriptionAr) ? selectedItem.descriptionAr : (((lang || '').toUpperCase() === 'AM' && selectedItem.descriptionAm) ? selectedItem.descriptionAm : selectedItem.description)}
                   </p>
                 )}
               </div>

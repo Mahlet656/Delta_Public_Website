@@ -38,11 +38,12 @@ export function formatPrice(
   }
 
   const formattedPrice = Math.round(price).toLocaleString();
+  const upperLang = (lang || 'en').toUpperCase();
 
-  if (lang === 'AR') {
+  if (upperLang === 'AR') {
     return `${formattedPrice} ${symbol}`;
   }
-  if (lang === 'AM') {
+  if (upperLang === 'AM') {
     return `${formattedPrice} ${symbol}`;
   }
 
@@ -71,7 +72,9 @@ export function formatPriceRange(
   const minFormatted = formatPrice(priceUsdMin, priceEtbMin, priceSarMin, currency, lang, fallbackRate);
   const maxFormatted = formatPrice(priceUsdMax, priceEtbMax, priceSarMax, currency, lang, fallbackRate);
   
-  if (lang === 'AR') {
+  const isAr = (lang || 'en').toUpperCase() === 'AR';
+
+  if (isAr) {
     return `${maxFormatted} - ${minFormatted}`;
   }
   return `${minFormatted} - ${maxFormatted}`;
@@ -121,11 +124,12 @@ export function formatDiscountedPrice(
  * Get discount display text
  */
 export function getDiscountDisplay(discount: any, lang: Language): string {
-  const label = lang === 'AR' ? (discount.labelAr || discount.label) : discount.label;
+  const isAr = (lang || 'en').toUpperCase() === 'AR';
+  const label = isAr ? (discount.labelAr || discount.label) : discount.label;
   
   if (discount.type === 'percentage') {
-    return `${discount.value}% ${lang === 'AR' ? 'خصم' : 'off'} - ${label}`;
+    return `${discount.value}% ${isAr ? 'خصم' : 'off'} - ${label}`;
   } else {
-    return `$${discount.value} ${lang === 'AR' ? 'خصم' : 'off'} - ${label}`;
+    return `$${discount.value} ${isAr ? 'خصم' : 'off'} - ${label}`;
   }
 }

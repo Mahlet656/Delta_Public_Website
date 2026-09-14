@@ -6,7 +6,7 @@ export async function getPublicTeamMembersApi(): Promise<TeamMember[]> {
   try {
     const res = await api.get('/team-members');
     // Backend returns { status, success, count, data: [...] }
-    return res?.data || [];
+    return (res as any)?.data || [];
   } catch (error) {
     console.error('❌ Error fetching team members:', error);
     return [];
