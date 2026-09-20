@@ -23,9 +23,9 @@ export const SmsToastNotifier: React.FC<SmsToastNotifierProps> = ({ toast, onClo
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -20, scale: 0.9 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-          className="fixed top-20 right-4 z-50 max-w-sm w-full bg-slate-900/95 backdrop-blur-md text-white rounded-2xl p-4 shadow-2xl border border-amber-500/30 flex items-start space-x-3.5 rtl:space-x-reverse"
+          className="fixed top-20 right-4 z-50 max-w-sm w-full bg-[#0E0C0A]/95 backdrop-blur-md text-white p-4 shadow-xl border border-amber-500/30 flex items-start space-x-3.5 rtl:space-x-reverse"
         >
-          <div className="p-2.5 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-xl text-amber-300 shadow-md flex-shrink-0">
+          <div className="p-2.5 bg-gradient-to-br from-emerald-600 to-teal-700 text-amber-300 shadow-md flex-shrink-0">
             <Smartphone className="w-6 h-6 animate-pulse" />
           </div>
 
@@ -34,14 +34,14 @@ export const SmsToastNotifier: React.FC<SmsToastNotifierProps> = ({ toast, onClo
               <span className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1">
                 <MessageSquare className="w-3.5 h-3.5" /> {t('smsNotificationSent', 'SMS Notification Sent')}
               </span>
-              <span className="text-[10px] text-slate-400">{t('justNow', 'Just Now')}</span>
+              <span className="text-[10px] text-[#9A9488]">{t('justNow', 'Just Now')}</span>
             </div>
             
-            <p className="text-xs font-medium text-slate-200 mb-1">
+            <p className="text-xs font-medium text-[#E7E2D9] mb-1">
               {t('toLabel', 'To:')} <span dir="ltr" className="font-semibold text-emerald-400 whitespace-nowrap inline-block">{toast.phone}</span>
             </p>
             
-            <p className="text-xs text-slate-300 bg-slate-800/80 p-2 rounded-lg border border-slate-700/50 leading-relaxed font-mono">
+            <p className="text-xs text-[#B8B2A6] bg-[#17130F]/80 p-2 border border-white/10/50 leading-relaxed font-mono">
               "{toast.message}"
             </p>
 
@@ -52,7 +52,7 @@ export const SmsToastNotifier: React.FC<SmsToastNotifierProps> = ({ toast, onClo
 
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-slate-800"
+            className="text-[#9A9488] hover:text-white transition-colors p-1 hover:bg-[#17130F]"
             title={t('dismiss', 'Dismiss notification')}
           >
             <X className="w-4 h-4" />

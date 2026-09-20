@@ -3,19 +3,28 @@
 /* GLOBAL THEME COLOR & STYLING VARIABLES 
    Change these variables or classes anytime to easily re-style the whole website! */
 :root {
-  /* ===== COLORS ===== */
-  --primary-color: #C8102E;
-  --primary-hover: #a60d25;
-  --primary-light: #fef2f2;
-  --primary-border: #fecaca;
+  /* ===== COLORS =====
+     Luxury palette: near-black ink, warm cream paper, one restrained
+     burgundy accent, brass hairline for editorial detail. Red is used
+     sparingly (CTAs, small labels, price) — never as a broad fill. */
+  --primary-color: #7A0C1F;
+  --primary-hover: #580815;
+  --primary-light: #FBEAEA;
+  --primary-border: #E7C6C6;
+  --brass: #A6853A;
+
+  --ink: #0E0C0A;
+  --ink-soft: #17130F;
+  --paper: #FAF7F2;
+  --paper-dim: #F1EBE0;
+
+  --dark-header-bg: var(--ink);
+  --dark-header-border: rgba(255,255,255,0.1);
+  --dark-footer-bg: var(--ink);
   
-  --dark-header-bg: #0b0f19;
-  --dark-header-border: #1e293b;
-  --dark-footer-bg: #070a11;
-  
-  --body-bg: #F9F9F9;
-  --text-main: #1F2937;
-  --text-muted: #6B7280;
+  --body-bg: var(--paper);
+  --text-main: #1A1712;
+  --text-muted: #6B655A;
   
   /* ===== FONTS ===== */
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -51,6 +60,9 @@
   --color-brand-primary: var(--primary-color);
   --color-brand-hover: var(--primary-hover);
   --color-brand-dark: var(--dark-header-bg);
+  --color-brand-brass: var(--brass);
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
   --color-offwhite: var(--body-bg);
 }
 
@@ -136,24 +148,103 @@ body {
   background-size: 24px 24px;
 }
 
-/* ===== AIRLINE CAROUSEL ANIMATION ===== */
-@keyframes scroll {
-  0% {
+/* ===== Arch photo crop — recurring architectural motif for photo
+   frames (nod to mihrab/mosque arches), and a thin brass hairline
+   used sparingly next to eyebrow labels. ===== */
+.arch-crop {
+  border-top-left-radius: 999px;
+  border-top-right-radius: 999px;
+}
+
+.rule-brass {
+  width: 34px;
+  height: 1px;
+  background-color: var(--brass);
+  display: inline-block;
+}
+
+/* ===== Airline partner marquee ===== */
+
+@keyframes marquee-scroll {
+  from {
     transform: translateX(0);
   }
-  100% {
+
+  to {
     transform: translateX(-50%);
   }
 }
 
-.animate-scroll {
-  display: flex;
-  animation: scroll 30s linear infinite;
-  width: fit-content;
+.marquee-viewport {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 7%,
+    #000 93%,
+    transparent
+  );
+
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 7%,
+    #000 93%,
+    transparent
+  );
 }
 
-.animate-scroll:hover {
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 38s linear infinite;
+  will-change: transform;
+}
+
+.marquee-viewport:hover .marquee-track {
   animation-play-state: paused;
+}
+
+@media (max-width: 767px) {
+  .marquee-track {
+    animation-duration: 30s;
+  }
+}
+/* ===== Scroll reveal ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ===== Faded geometric texture (used sparingly behind light sections) ===== */
+.pattern-texture {
+  position: relative;
+  isolation: isolate;
+}
+.pattern-texture::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/photos/geometric-pattern.jpg');
+  background-size: 480px auto;
+  background-position: center top;
+  opacity: 0.07;
+  z-index: -1;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+  .reveal { opacity: 1; transform: none; transition: none; }
 }
 
 /* ===== RTL Support ===== */
@@ -212,4 +303,284 @@ body {
 
 .animate-loading-bar {
   animation: loading-bar 1.5s ease-in-out infinite;
+}
+/* =====================================================================
+   DELTA TRAVEL — FINAL VISUAL REFINEMENT
+   Visual-only layer: preserves content, API behavior and interactions.
+   ===================================================================== */
+
+:root {
+  --primary-color: #7A0C1F;
+  --primary-hover: #580815;
+  --primary-light: #F8E9EB;
+  --primary-border: #DFC0C4;
+  --brass: #A6853A;
+  --brass-light: #D8B978;
+  --ink: #0E0C0A;
+  --ink-soft: #17130F;
+  --paper: #FAF7F2;
+  --paper-dim: #F1EBE0;
+  --text-main: #1A1712;
+  --text-muted: #6B655A;
+}
+
+/* Smoother overall rendering */
+html { scroll-behavior: smooth; }
+body { text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+
+/* Selection stays within the client brand */
+::selection { background: rgba(122, 12, 31, .16); color: var(--ink); }
+
+/* A quieter, more editorial scrollbar */
+::-webkit-scrollbar { width: 7px; }
+::-webkit-scrollbar-track { background: var(--paper-dim); }
+::-webkit-scrollbar-thumb { background: rgba(122,12,31,.72); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary-color); }
+
+/* Header refinement */
+header.fixed { transition: background-color .45s ease, box-shadow .45s ease, border-color .45s ease, backdrop-filter .45s ease; }
+header.fixed > div:first-child { letter-spacing: .02em; }
+header.fixed nav button { transition: color .25s ease, border-color .25s ease, opacity .25s ease; }
+header.fixed nav button::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform .25s ease;
+  opacity: .8;
+}
+header.fixed nav button:hover::after,
+header.fixed nav button[class*="border-b"]::after { transform: scaleX(1); }
+
+/* Page banners: architectural rather than decorative */
+section.relative.bg-\[\#0E0C0A\].text-white.overflow-hidden {
+  isolation: isolate;
+}
+section.relative.bg-\[\#0E0C0A\].text-white.overflow-hidden::before {
+  content: '';
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  right: -180px;
+  bottom: -280px;
+  border: 1px solid rgba(216,185,120,.18);
+  border-radius: 50%;
+  box-shadow: 0 0 0 36px rgba(216,185,120,.035), 0 0 0 72px rgba(216,185,120,.018);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Better light-section texture: barely visible */
+.pattern-texture::before { opacity: .045; background-size: 560px auto; }
+.bg-islamic-pattern { background-image: radial-gradient(circle at 2px 2px, rgba(122,12,31,.11) 1px, transparent 0); }
+
+/* Editorial eyebrow treatment */
+.rule-brass { width: 42px; background: linear-gradient(90deg, var(--brass), rgba(166,133,58,.15)); }
+
+/* Buttons: tactile, restrained */
+.btn-primary,
+[class*="bg-[#7A0C1F]"][class*="text-white"] {
+  transition: background-color .25s ease, transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.btn-primary:hover,
+[class*="bg-[#7A0C1F]"][class*="text-white"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(88,8,21,.14);
+}
+.btn-primary:active,
+[class*="bg-[#7A0C1F]"][class*="text-white"]:active { transform: translateY(0); }
+
+/* Inputs */
+input, select, textarea { transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease; }
+input:focus, select:focus, textarea:focus {
+  box-shadow: 0 0 0 3px rgba(122,12,31,.07);
+}
+
+/* Cards: premium flat/editorial treatment */
+.card-theme { border-radius: 0; border-color: rgba(26,23,18,.09); box-shadow: 0 8px 28px rgba(14,12,10,.045); }
+
+/* Home package cards */
+.grid > div[class*="hover:bg-[#F1EBE0]"] { position: relative; transition: background-color .35s ease, transform .35s ease; }
+.grid > div[class*="hover:bg-[#F1EBE0]"]::before {
+  content: '';
+  position: absolute;
+  left: 2rem;
+  right: 2rem;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(166,133,58,.35), transparent);
+  transform: scaleX(0);
+  transition: transform .4s ease;
+}
+.grid > div[class*="hover:bg-[#F1EBE0]"]:hover::before { transform: scaleX(1); }
+.grid > div[class*="hover:bg-[#F1EBE0]"] .arch-crop { box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); }
+.grid > div[class*="hover:bg-[#F1EBE0]"] .arch-crop img { transition: transform .7s cubic-bezier(.2,.7,.2,1), filter .5s ease; }
+.grid > div[class*="hover:bg-[#F1EBE0]"]:hover .arch-crop img { transform: scale(1.035); filter: saturate(.98) contrast(1.02); }
+
+/* All arch photography gets a gentle cinematic treatment */
+.arch-crop { box-shadow: inset 0 0 0 1px rgba(166,133,58,.12); }
+
+/* Gallery imagery */
+.group img { transition: transform .7s cubic-bezier(.2,.7,.2,1), filter .5s ease; }
+.group:hover img { transform: scale(1.035); }
+
+/* Team portraits */
+img[class*="rounded-full"][class*="border-[#7A0C1F]"] { transition: transform .35s ease, box-shadow .35s ease; }
+img[class*="rounded-full"][class*="border-[#7A0C1F]"]:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(122,12,31,.12); }
+
+/* Dark photography sections: richer edge falloff */
+.bg-cover + .bg-gradient-to-r { background-image: linear-gradient(90deg, rgba(14,12,10,.88) 0%, rgba(14,12,10,.62) 48%, rgba(14,12,10,.22) 100%); }
+
+/* Hero — cinematic but restrained */
+section.relative.overflow-hidden.bg-\[\#0E0C0A\] > .absolute.bg-cover {
+  transform: scale(1.025);
+  animation: dvt-hero-drift 16s ease-in-out infinite alternate;
+}
+@keyframes dvt-hero-drift {
+  from { transform: scale(1.025) translate3d(0,0,0); }
+  to { transform: scale(1.055) translate3d(-.35%, -.2%, 0); }
+}
+
+/* Give first hero copy an intentional reveal even when JS is not used */
+section.relative.overflow-hidden.bg-\[\#0E0C0A\] .max-w-xl > * {
+  animation: dvt-rise .75s cubic-bezier(.2,.75,.2,1) both;
+}
+section.relative.overflow-hidden.bg-\[\#0E0C0A\] .max-w-xl > *:nth-child(1) { animation-delay: .08s; }
+section.relative.overflow-hidden.bg-\[\#0E0C0A\] .max-w-xl > *:nth-child(2) { animation-delay: .16s; }
+section.relative.overflow-hidden.bg-\[\#0E0C0A\] .max-w-xl > *:nth-child(3) { animation-delay: .24s; }
+section.relative.overflow-hidden.bg-\[\#0E0C0A\] .max-w-xl > *:nth-child(4) { animation-delay: .32s; }
+section.relative.overflow-hidden.bg-\[\#0E0C0A\] .max-w-xl > *:nth-child(5) { animation-delay: .4s; }
+@keyframes dvt-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* Subtle crescent-like architectural ornament on dark CTA/banner surfaces.
+   This is intentionally abstract and low contrast. */
+section.relative.overflow-hidden.bg-\[\#0E0C0A\]::after {
+  content: '';
+  position: absolute;
+  width: 170px;
+  height: 170px;
+  right: 5%;
+  top: 22%;
+  border: 1px solid rgba(216,185,120,.13);
+  border-radius: 50%;
+  box-shadow: -18px 10px 0 -1px rgba(14,12,10,.75);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Trust strip */
+section.relative.overflow-hidden.bg-\[\#0E0C0A\] .backdrop-blur-sm {
+  border-top-color: rgba(216,185,120,.14);
+}
+
+/* Airline cards: less generic, more editorial */
+.group[class*="h-64"] { box-shadow: 0 12px 32px rgba(14,12,10,.10); }
+.group[class*="h-64"] .absolute.bg-cover { transition: transform .9s cubic-bezier(.2,.7,.2,1); }
+.group[class*="h-64"]:hover .absolute.bg-cover { transform: scale(1.04); }
+
+/* Section headings gain a small editorial rhythm */
+section h2.font-serif { letter-spacing: -.018em; }
+section h3.font-serif { letter-spacing: -.01em; }
+
+/* Links and understated text buttons */
+button[class*="border-b"] { transition: color .25s ease, border-color .25s ease, gap .25s ease; }
+button[class*="border-b"]:hover { gap: .7rem; }
+
+/* Footer / dark areas */
+footer a { transition: color .2s ease, opacity .2s ease; }
+
+/* Floating WhatsApp should feel integrated, not like a separate widget */
+.fixed[class*="whatsapp"],
+button[aria-label*="WhatsApp"],
+a[aria-label*="WhatsApp"] { transition: transform .25s ease, box-shadow .25s ease; }
+
+/* Mobile spacing and type refinement */
+@media (max-width: 767px) {
+  html { font-size: 18px; }
+  section.relative.overflow-hidden.bg-\[\#0E0C0A\] > .absolute.bg-cover { animation-duration: 22s; }
+  section.relative.overflow-hidden.bg-\[\#0E0C0A\]::after { width: 110px; height: 110px; right: -35px; top: 16%; }
+  .pattern-texture::before { background-size: 420px auto; opacity: .035; }
+}
+
+/* Reduced-motion compliance */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  section.relative.overflow-hidden.bg-\[\#0E0C0A\] > .absolute.bg-cover,
+  section.relative.overflow-hidden.bg-\[\#0E0C0A\] .max-w-xl > * { animation: none !important; }
+  .grid > div[class*="hover:bg-[#F1EBE0]"],
+  .group img,
+  .arch-crop img { transition: none !important; }
+}
+
+/* =========================================================================
+   NIGHT THEME
+   Toggled by setting data-theme="dark" on <html> (see ThemeToggle / App.tsx).
+   Rather than rewriting every component, this remaps the literal Tailwind
+   color utilities already used throughout the app via attribute selectors —
+   the same technique used above for the hero/card refinements. Backgrounds
+   that are already near-black (hero, footer, CTA bands) are untouched since
+   they already read correctly in both themes. Brand burgundy/brass are kept
+   close to their light-mode hues so the identity doesn't shift between
+   themes, only brightened enough to stay legible on dark surfaces.
+   ========================================================================= */
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* Page backgrounds */
+html[data-theme="dark"] [class*="bg-[#FAF7F2]"] { background-color: #14110D !important; }
+html[data-theme="dark"] [class*="bg-[#F1EBE0]"] { background-color: #1E1812 !important; }
+html[data-theme="dark"] [class*="bg-[#EAE4D8]"] { background-color: #221C15 !important; }
+html[data-theme="dark"] [class*="bg-white"] { background-color: #1A1712 !important; }
+
+/* Body text */
+html[data-theme="dark"] [class*="text-[#1A1712]"] { color: #F1EBE0 !important; }
+html[data-theme="dark"] [class*="text-[#4A463F]"] { color: #C9C2B3 !important; }
+html[data-theme="dark"] [class*="text-[#6B655A]"] { color: #B0A99C !important; }
+html[data-theme="dark"] [class*="text-[#9A9488]"] { color: #A69F91 !important; }
+html[data-theme="dark"] [class*="placeholder-[#9A9488]"]::placeholder { color: #8A8378 !important; }
+
+/* Brand red as text (prices, labels, eyebrows) brightened for dark contrast;
+   as a fill (buttons) it stays exactly as-is — the brand color is unchanged. */
+html[data-theme="dark"] [class*="text-[#7A0C1F]"] { color: #E0899A !important; }
+html[data-theme="dark"] [class*="text-[#A6853A]"] { color: #C9A45A !important; }
+
+/* Borders / dividers */
+html[data-theme="dark"] [class*="border-black/[0.08]"] { border-color: rgba(255,255,255,0.09) !important; }
+html[data-theme="dark"] [class*="border-black/[0.06]"] { border-color: rgba(255,255,255,0.07) !important; }
+html[data-theme="dark"] [class*="border-black/10"] { border-color: rgba(255,255,255,0.12) !important; }
+html[data-theme="dark"] [class*="divide-black/[0.08]"] { border-color: rgba(255,255,255,0.09) !important; }
+html[data-theme="dark"] [class*="divide-black/[0.06]"] { border-color: rgba(255,255,255,0.07) !important; }
+
+/* Shadows read as mud on dark surfaces — soften them */
+html[data-theme="dark"] [class*="shadow-sm"],
+html[data-theme="dark"] [class*="shadow-md"],
+html[data-theme="dark"] [class*="shadow-lg"],
+html[data-theme="dark"] [class*="shadow-xl"] { box-shadow: 0 1px 2px rgba(0,0,0,0.4) !important; }
+
+/* Package/photo placeholder tint (arch-crop empty states, etc.) */
+html[data-theme="dark"] .arch-crop { background-color: #1E1812; }
+
+/* Form inputs: keep them a touch lighter than the page so they read as
+   fields, not just more background. */
+html[data-theme="dark"] input[class*="bg-[#FAF7F2]"],
+html[data-theme="dark"] select[class*="bg-[#FAF7F2]"],
+html[data-theme="dark"] textarea[class*="bg-[#FAF7F2]"] { background-color: #221C15 !important; color: #F1EBE0; }
+
+/* The geometric texture is calibrated for a light background; lower it
+   further on dark surfaces so it doesn't read as visual noise. */
+html[data-theme="dark"] .pattern-texture::before { opacity: 0.05; }
+
+/* Sections that are already dark by design (hero, footer, CTA bands,
+   PageBanner, utility bar) are intentionally left untouched above — they
+   already match the night theme's tone. */
+
+@media (prefers-color-scheme: dark) {
+  /* No forced default: the toggle is explicit and persisted, so a plain OS
+     preference alone does not flip the theme automatically. */
 }

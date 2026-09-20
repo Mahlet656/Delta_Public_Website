@@ -6,10 +6,10 @@
   "packages": "Umrah Packages",
   "hotelsFlights": "Airline Partners",
   "gallery": "Media Gallery",
-  "contact": "Contact Us and FAQs",
+  "contact": "Contact Us & Office",
   "faqs": "FAQs",
   "bookNow": "Inquire Now",
-  "callUs": "Call 24/7",
+  "callUs": "Call",
   "licensedBadge": "Ministry License #4812",
   "footerDescription": "Providing reliable, comfortable, and high-quality Umrah travel services with professionalism, care, and respect.",
   "quickLinks": "Quick Navigation",
@@ -218,7 +218,6 @@
   "errorLoadingGallery": "Failed to load gallery. Please refresh.",
   "errorSubmittingInquiry": "Failed to submit inquiry. Please check your connection and try again.",
   "packageLabel": "Package",
-  "fromLabel": "From",
   "daysLabel": "Days",
   "packagePrice": "Package Price",
   "availableDiscounts": "Available Discounts",
@@ -233,7 +232,6 @@
   "personsLabel": "Persons",
   "includesFlightsNote": "*Includes roundtrip direct flights with our Airline Partners and full Mutawwif guidance.",
   "chatOnWhatsApp": "Chat on WhatsApp",
-  "callUs": "Call",
   "discountAvailable": "Discount Available",
   "smsNotificationSent": "SMS Notification Sent",
   "justNow": "Just Now",
@@ -244,5 +242,7 @@
   "smsAlertsWelcome": "DELTA TRAVEL: Welcome to Delta SMS Alerts! You'll receive instant Umrah package and departure updates.",
   "loadingGallery": "Loading Gallery...",
   "detailsBtn": "Details",
-  "inclusionsAndPerks": "Inclusions & Perks"
+  "inclusionsAndPerks": "Inclusions & Perks",
+  "ctaTitle": "Your sacred journey begins here.",
+  "ctaSubtitle": "Speak with our team today and reserve your place on an upcoming Umrah or Hajj departure."
 }

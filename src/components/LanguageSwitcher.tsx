@@ -54,7 +54,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   if (variant === 'toggle') {
     return (
       <div 
-        className={`inline-flex items-center p-1 rounded-xl bg-slate-100 border border-slate-200 text-xs font-semibold ${className}`}
+        className={`inline-flex items-center p-1 bg-[#F1EBE0] border border-black/10 text-xs ${className}`}
         role="group"
         aria-label="Select Language"
       >
@@ -66,8 +66,8 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
               onClick={() => handleSelect(opt.code)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all duration-200 cursor-pointer ${
                 isActive
-                  ? 'bg-white text-[#C8102E] shadow-sm font-bold scale-[1.02]'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                  ? 'bg-white text-[#7A0C1F] shadow-sm'
+                  : 'text-[#6B655A] hover:text-[#1A1712] hover:bg-white/60'
               } ${opt.fontClass}`}
               title={`${opt.label} (${opt.nativeLabel})`}
               aria-pressed={isActive}
@@ -94,24 +94,24 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         aria-haspopup="listbox"
         className={`group flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[11px] sm:text-xs font-medium transition-all duration-200 cursor-pointer border ${
           isDark
-            ? 'bg-slate-900/90 hover:bg-slate-800 border-slate-700/80 text-slate-100 hover:border-slate-600 shadow-sm'
-            : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700 hover:border-slate-300 shadow-sm'
+            ? 'bg-white/5 hover:bg-white/10 border-white/15 text-white hover:border-white/30'
+            : 'bg-white hover:bg-[#F1EBE0] border-black/10 text-[#1A1712] hover:border-black/20'
         } ${size === 'md' ? 'px-3 py-1.5 text-xs' : ''}`}
         title={`Current Language: ${currentOption.label} (${currentOption.nativeLabel})`}
       >
-        <Globe className="w-3.5 h-3.5 text-[#C8102E] group-hover:rotate-12 transition-transform duration-300 shrink-0" />
+        <Globe className="w-3.5 h-3.5 text-[#7A0C1F] group-hover:rotate-12 transition-transform duration-300 shrink-0" />
         
         {/* Active Language Flag & Native Label */}
         <span className="text-xs shrink-0">{currentOption.flag}</span>
         <span className={`font-semibold tracking-wide ${currentOption.fontClass}`}>
           {currentOption.nativeLabel}
         </span>
-        <span className="text-[10px] text-slate-400 uppercase font-mono tracking-wider ml-0.5">
+        <span className="text-[10px] text-[#9A9488] uppercase font-mono tracking-wider ml-0.5">
           ({currentOption.code})
         </span>
 
         <ChevronDown 
-          className={`w-3 h-3 text-slate-400 transition-transform duration-200 shrink-0 ${
+          className={`w-3 h-3 text-[#9A9488] transition-transform duration-200 shrink-0 ${
             isOpen ? 'rotate-180' : ''
           }`} 
         />
@@ -122,14 +122,14 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         <div
           role="listbox"
           aria-label="Language options"
-          className={`absolute z-50 mt-1.5 min-w-[190px] rounded-xl bg-white border border-slate-200/90 shadow-2xl py-1.5 animate-in fade-in-0 zoom-in-95 duration-150 ${
+          className={`absolute z-50 mt-1.5 min-w-[190px] bg-white border border-black/10 shadow-xl py-1.5 animate-in fade-in-0 zoom-in-95 duration-150 ${
             isRtl ? 'left-0 origin-top-left' : 'right-0 origin-top-right'
           }`}
         >
           {/* Menu Header */}
-          <div className="px-3 py-1.5 border-b border-slate-100 mb-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
-              <Globe className="w-3 h-3 text-[#C8102E]" />
+          <div className="px-3 py-1.5 border-b border-black/[0.06] mb-1">
+            <span className="text-[10px] uppercase tracking-wider text-[#9A9488] flex items-center gap-1">
+              <Globe className="w-3 h-3 text-[#7A0C1F]" />
               Select Language / ቋንቋ / اللغة
             </span>
           </div>
@@ -145,8 +145,8 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
                 onClick={() => handleSelect(opt.code)}
                 className={`w-full flex items-center justify-between px-3 py-2 text-xs transition-colors cursor-pointer text-left rtl:text-right ${
                   isActive
-                    ? 'bg-red-50/80 text-[#C8102E] font-bold'
-                    : 'text-slate-700 hover:bg-slate-50 hover:text-slate-900'
+                    ? 'bg-[#F1EBE0] text-[#7A0C1F]'
+                    : 'text-[#4A463F] hover:bg-[#FAF7F2] hover:text-[#1A1712]'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
@@ -155,14 +155,14 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
                     <span className={`text-xs font-semibold ${opt.fontClass}`}>
                       {opt.nativeLabel}
                     </span>
-                    <span className="text-[10px] text-slate-400 font-normal">
+                    <span className="text-[10px] text-[#9A9488] font-normal">
                       {opt.label} • {opt.code.toUpperCase()}
                     </span>
                   </div>
                 </div>
 
                 {isActive && (
-                  <div className="w-4 h-4 rounded-full bg-[#C8102E] text-white flex items-center justify-center shrink-0 shadow-xs">
+                  <div className="w-4 h-4 rounded-full bg-[#7A0C1F] text-white flex items-center justify-center shrink-0 shadow-xs">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
                 )}

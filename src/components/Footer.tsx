@@ -75,40 +75,40 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
   };
 
   return (
-    <footer className="bg-[#0b0f19] text-white pt-16 pb-6 border-t border-slate-800">
+    <footer className="bg-[#0E0C0A] text-white pt-20 pb-8 pattern-texture">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         
         {/* Main Footer Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-12 border-b border-slate-800/60">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-12 border-b border-white/10">
           
           {/* Column 1: Brand & About - Using Logo component */}
           <div className="space-y-4">
-  <div className="flex items-center gap-2">
-    <div className="w-1.5 h-8 bg-[#C8102E] rounded-full" />
+  <div className="flex items-center gap-3">
+    <img src="/logo/logo-mark.png" alt="" className="h-9 w-auto object-contain flex-shrink-0" />
     <div>
-      <h3 className="text-white font-extrabold text-base tracking-tight">
+      <h3 className="font-serif text-lg text-white tracking-wide leading-none">
         {t.brandName || "Delta Travel & Tour"}
       </h3>
-      <p className="text-[10px] text-[#FC8181] uppercase font-bold tracking-wider">
+      <p className="text-[9px] text-[#9A9488] uppercase tracking-[0.15em] mt-1.5">
         {t.brandSubtitle || "Licensed Umrah Service Agency"}
       </p>
     </div>
   </div>
-  <p className="text-xs text-slate-300 leading-relaxed max-w-xs">
+  <p className="text-[13px] text-[#B8B2A6] leading-relaxed max-w-xs">
     {t.footerDescription || 'Providing reliable, comfortable, and high-quality Umrah travel services with professionalism, care, and respect.'}
   </p>
 </div>
 
           {/* Column 2: Quick Links */}
           <div className="space-y-4">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+            <h4 className="text-[11px] text-[#A6853A] uppercase tracking-[0.14em]">
               {t.quickLinks || 'Quick Links'}
             </h4>
             <ul className="space-y-2.5 text-xs">
               <li>
                 <button
                   onClick={() => setActivePage('home')}
-                  className="text-slate-300 hover:text-[#C8102E] transition-colors"
+                  className="text-[#B8B2A6] hover:text-[#D8B978] transition-colors"
                 >
                   {t.home || 'Home'}
                 </button>
@@ -116,7 +116,7 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
                <li>
                 <button
                   onClick={() => setActivePage('about')}
-                  className="text-slate-300 hover:text-[#C8102E] transition-colors"
+                  className="text-[#B8B2A6] hover:text-[#D8B978] transition-colors"
                 >
                   {t.about || 'About Us'}
                 </button>
@@ -124,7 +124,7 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
               <li>
                 <button
                   onClick={() => setActivePage('packages')}
-                  className="text-slate-300 hover:text-[#C8102E] transition-colors"
+                  className="text-[#B8B2A6] hover:text-[#D8B978] transition-colors"
                 >
                   {t.packages || 'Packages'}
                 </button>
@@ -132,7 +132,7 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
               <li>
                 <button
                   onClick={() => setActivePage('gallery')}
-                  className="text-slate-300 hover:text-[#C8102E] transition-colors"
+                  className="text-[#B8B2A6] hover:text-[#D8B978] transition-colors"
                 >
                   {t.gallery || 'Gallery'}
                 </button>
@@ -140,8 +140,16 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
              
               <li>
                 <button
+                  onClick={() => setActivePage('faqs')}
+                  className="text-[#B8B2A6] hover:text-[#D8B978] transition-colors"
+                >
+                  {t.faqs || 'FAQs'}
+                </button>
+              </li>
+              <li>
+                <button
                   onClick={() => setActivePage('contact')}
-                  className="text-slate-300 hover:text-[#C8102E] transition-colors"
+                  className="text-[#B8B2A6] hover:text-[#D8B978] transition-colors"
                 >
                   {t.contact || 'Contact'}
                 </button>
@@ -151,48 +159,48 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
 
           {/* Column 3: Contact Info */}
           <div className="space-y-4">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+            <h4 className="text-[11px] text-[#A6853A] uppercase tracking-[0.14em]">
               {t.contactInfo || 'Contact Info'}
             </h4>
             <ul className="space-y-3 text-xs">
-              <li className="flex items-start gap-2.5 text-slate-300">
-                <MapPin className="w-4 h-4 text-[#C8102E] flex-shrink-0 mt-0.5" />
+              <li className="flex items-start gap-2.5 text-[#B8B2A6]">
+                <MapPin className="w-4 h-4 text-[#A6853A] flex-shrink-0 mt-0.5" />
                 <span>{t.addressFull || "Bole Friendship Building 4th Floor, Office 408, Addis Ababa, Ethiopia"}</span>
               </li>
-              <li className="flex items-start gap-2.5 text-slate-300">
-                <Phone className="w-4 h-4 text-[#C8102E] flex-shrink-0 mt-0.5" />
-                <div className="flex flex-col gap-1 text-slate-300">
+              <li className="flex items-start gap-2.5 text-[#B8B2A6]">
+                <Phone className="w-4 h-4 text-[#A6853A] flex-shrink-0 mt-0.5" />
+                <div className="flex flex-col gap-1 text-[#B8B2A6]">
                   <a 
                     href="tel:+251910136747" 
                     dir="ltr"
-                    className="whitespace-nowrap hover:text-[#C8102E] transition-colors inline-block text-start"
+                    className="whitespace-nowrap hover:text-[#D8B978] transition-colors inline-block text-start"
                   >
                     +251 91 013 6747
                   </a>
                   <a 
                     href="tel:+251956585555" 
                     dir="ltr"
-                    className="whitespace-nowrap hover:text-[#C8102E] transition-colors inline-block text-start"
+                    className="whitespace-nowrap hover:text-[#D8B978] transition-colors inline-block text-start"
                   >
                     +251 95 658 5555
                   </a>
                   <a 
                     href="tel:+251956595555" 
                     dir="ltr"
-                    className="whitespace-nowrap hover:text-[#C8102E] transition-colors inline-block text-start"
+                    className="whitespace-nowrap hover:text-[#D8B978] transition-colors inline-block text-start"
                   >
                     +251 95 659 5555
                   </a>
                 </div>
               </li>
-              <li className="flex items-center gap-2.5 text-slate-300">
-                <Mail className="w-4 h-4 text-[#C8102E] flex-shrink-0" />
-                <a href="mailto:info@deltatravel.com" className="hover:text-[#C8102E] transition-colors">
+              <li className="flex items-center gap-2.5 text-[#B8B2A6]">
+                <Mail className="w-4 h-4 text-[#A6853A] flex-shrink-0" />
+                <a href="mailto:info@deltatravel.com" className="hover:text-[#D8B978] transition-colors">
                   info@deltagrouptravelumrah.com
                 </a>
               </li>
-              <li className="flex items-start gap-2.5 text-slate-300">
-                <Clock className="w-4 h-4 text-[#C8102E] flex-shrink-0 mt-0.5" />
+              <li className="flex items-start gap-2.5 text-[#B8B2A6]">
+                <Clock className="w-4 h-4 text-[#A6853A] flex-shrink-0 mt-0.5" />
                 <div>
                   <span>{t.monToSatHours || "Mon–Sat: 2:30 AM – 11:30 PM LT"}</span> <br></br>
                   <span>{t.sunAndHolidays || "Sunday & Holidays: On-call WhatsApp Assistance"}</span>
@@ -203,18 +211,18 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
 
           {/* Column 4: Social Media & Newsletter */}
           <div className="space-y-4">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+            <h4 className="text-[11px] text-[#A6853A] uppercase tracking-[0.14em]">
               {t.followUs || 'Follow Us'}
             </h4>
 
             {/* Social Links from Backend */}
             <div className="flex flex-wrap gap-2">
               {loading ? (
-                <div className="flex items-center gap-2 text-xs text-slate-400">
+                <div className="flex items-center gap-2 text-xs text-[#9A9488]">
                   <span>{t.loading || "Loading..."}</span>
                 </div>
               ) : socialLinks.length === 0 ? (
-                <p className="text-xs text-slate-400">{t.noSocialLinks || "No social links configured"}</p>
+                <p className="text-xs text-[#9A9488]">{t.noSocialLinks || "No social links configured"}</p>
               ) : (
                 socialLinks.map((link) => (
                   <a
@@ -222,10 +230,10 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full bg-slate-800/60 hover:bg-[#C8102E] flex items-center justify-center transition-colors duration-300 border border-slate-700/50 hover:border-[#C8102E] group"
+                    className="w-10 h-10 rounded-full bg-white/5 hover:bg-[#7A0C1F] flex items-center justify-center transition-colors duration-300 border border-white/10 hover:border-[#7A0C1F] group"
                     aria-label={link.platform}
                   >
-                    <span className="text-slate-300 group-hover:text-white transition-colors">
+                    <span className="text-[#B8B2A6] group-hover:text-white transition-colors">
                       {getSocialIcon(link.platform, "w-4 h-4")}
                     </span>
                   </a>
@@ -234,7 +242,7 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
             </div>
 
             <div className="pt-2">
-              <p className="text-[11px] text-slate-400 leading-relaxed">
+              <p className="text-[11px] text-[#9A9488] leading-relaxed">
                 {t.followUsText || 'Follow us on social media for latest Umrah updates, promotions, and travel tips.'}
               </p>
             </div>
@@ -244,7 +252,7 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
   href="https://wa.me/251910136747?text=Assalamu%20Alaikum%20Delta%20Travel!"
   target="_blank"
   rel="noopener noreferrer"
-  className="inline-flex items-center gap-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-lg transition-colors shadow-lg shadow-emerald-600/20"
+  className="inline-flex items-center gap-2.5 border border-white/30 hover:border-white text-white text-xs tracking-wide px-5 py-3 transition-colors"
 >
   {/* WhatsApp SVG Icon */}
   <svg 
@@ -261,11 +269,17 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
         </div>
 
         {/* Bottom Footer */}
-        <div className="pt-6 flex flex-col items-center justify-center gap-3 text-sm text-slate-400 text-center">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-[12px] text-[#9A9488] text-center sm:text-left rtl:sm:text-right">
           <p>
             {t.allRightsReserved || `© ${new Date().getFullYear()} Delta Travel & Tour. All Rights Reserved.`}
           </p>
-</div>
+          <button
+            onClick={() => setActivePage('faqs')}
+            className="hover:text-[#D8B978] transition-colors"
+          >
+            {t.faqs || 'FAQs'}
+          </button>
+        </div>
       </div>
     </footer>
   );

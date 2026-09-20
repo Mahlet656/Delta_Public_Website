@@ -24,10 +24,10 @@ export const FloatingWhatsApp: React.FC = () => {
             initial={{ opacity: 0, scale: 0.8, x: 20 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
             exit={{ opacity: 0, scale: 0.8, x: 20 }}
-            className="mr-3 mb-2 w-80 bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200 text-slate-800"
+            className="mr-3 mb-2 w-80 bg-white shadow-xl overflow-hidden border border-black/[0.08] text-[#1A1712]"
           >
             {/* Header */}
-            <div className="bg-[#C8102E] text-white p-4 flex items-center justify-between shadow-sm">
+            <div className="bg-[#7A0C1F] text-white p-4 flex items-center justify-between shadow-sm">
               <div className="flex items-center space-x-3 rtl:space-x-reverse">
                 <div className="relative">
                   <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center font-bold text-white text-sm">
@@ -45,16 +45,16 @@ export const FloatingWhatsApp: React.FC = () => {
 
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-red-100 hover:text-white transition-colors p-1 rounded-lg hover:bg-red-700"
+                className="text-red-100 hover:text-white transition-colors p-1 hover:bg-[#580815]"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Body */}
-            <div className="p-4 bg-slate-50 space-y-3 text-xs">
-              <div className="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
-                <p className="font-medium text-slate-800">
+            <div className="p-4 bg-[#FAF7F2] space-y-3 text-xs">
+              <div className="bg-white p-3 shadow-sm border border-black/[0.08]">
+                <p className="font-medium text-[#1A1712]">
                   Assalamu Alaikum! 🕋 How can Delta Travel & Tour assist your sacred journey today?
                 </p>
               </div>
@@ -63,17 +63,17 @@ export const FloatingWhatsApp: React.FC = () => {
               <div className="space-y-1.5 pt-1">
                 <button
                   onClick={() => handleSend("Inquiry: Umrah Package Details ")}
-                  className="w-full text-left p-2 rounded-lg bg-white hover:bg-red-50 text-slate-800 border border-slate-200 transition-colors flex items-center justify-between"
+                  className="w-full text-left p-2 bg-white hover:bg-[#F1EBE0] text-[#1A1712] border border-black/[0.08] transition-colors flex items-center justify-between"
                 >
                   <span>🕋 Umrah Package Quotes</span>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-red-600" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#7A0C1F]" />
                 </button>
                 <button
                   onClick={() => handleSend("Inquiry: Umrah E-Visa Processing Time & Documents")}
-                  className="w-full text-left p-2 rounded-lg bg-white hover:bg-red-50 text-slate-800 border border-slate-200 transition-colors flex items-center justify-between"
+                  className="w-full text-left p-2 bg-white hover:bg-[#F1EBE0] text-[#1A1712] border border-black/[0.08] transition-colors flex items-center justify-between"
                 >
                   <span>📋 Umrah Visa Guidance</span>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-red-600" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#7A0C1F]" />
                 </button>
               </div>
 
@@ -85,11 +85,11 @@ export const FloatingWhatsApp: React.FC = () => {
                   value={userMsg}
                   onChange={(e) => setUserMsg(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                  className="flex-1 bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className="flex-1 bg-white border border-black/10 px-3 py-2 text-xs focus:outline-none focus:border-[#7A0C1F]"
                 />
                 <button
                   onClick={() => handleSend()}
-                  className="bg-[#C8102E] hover:bg-red-700 text-white p-2 rounded-xl transition-colors shadow"
+                  className="bg-[#7A0C1F] hover:bg-[#580815] text-white p-2 transition-colors shadow"
                   title="Send via WhatsApp"
                 >
                   <Send className="w-4 h-4" />
@@ -105,7 +105,7 @@ export const FloatingWhatsApp: React.FC = () => {
   {/* WhatsApp Button */}
   <button
     onClick={() => setIsOpen(!isOpen)}
-    className="bg-[#C8102E] hover:bg-[#a60d25] text-white py-2.5 px-3 rounded-l-xl shadow-lg flex flex-col items-center justify-center min-w-[70px] h-[60px] transition-transform hover:-translate-x-1 border-y border-l border-red-700"
+    className="bg-[#7A0C1F] hover:bg-[#580815] text-white py-2.5 px-3 rounded-l-md shadow-lg flex flex-col items-center justify-center min-w-[70px] h-[60px] transition-transform hover:-translate-x-1 border-y border-l border-[#580815]"
     title="WhatsApp Chat"
   >
     {/* WhatsApp SVG Icon - Clean version */}
@@ -121,7 +121,7 @@ export const FloatingWhatsApp: React.FC = () => {
   {/* Call Us Button */}
   <a
     href="tel:++251910136747 "
-    className="bg-[#C8102E] hover:bg-[#a60d25] text-white py-2.5 px-3 rounded-l-xl shadow-lg flex flex-col items-center justify-center min-w-[70px] h-[60px] transition-transform hover:-translate-x-1 border-y border-l border-red-700"
+    className="bg-[#7A0C1F] hover:bg-[#580815] text-white py-2.5 px-3 rounded-l-md shadow-lg flex flex-col items-center justify-center min-w-[70px] h-[60px] transition-transform hover:-translate-x-1 border-y border-l border-[#580815]"
     title="Call Us"
   >
     <Phone className="w-5 h-5 mb-0.5" />
@@ -130,7 +130,7 @@ export const FloatingWhatsApp: React.FC = () => {
   {/* Send SMS Button */}
 <a
     href="sms:+251910136747 "
-    className="bg-[#C8102E] hover:bg-[#a60d25] text-white py-2.5 px-3 rounded-l-xl shadow-lg flex flex-col items-center justify-center min-w-[70px] h-[60px] transition-transform hover:-translate-x-1 border-y border-l border-red-700"
+    className="bg-[#7A0C1F] hover:bg-[#580815] text-white py-2.5 px-3 rounded-l-md shadow-lg flex flex-col items-center justify-center min-w-[70px] h-[60px] transition-transform hover:-translate-x-1 border-y border-l border-[#580815]"
     title="Send SMS"
   >
     <MessageSquare className="w-5 h-5 mb-0.5" />

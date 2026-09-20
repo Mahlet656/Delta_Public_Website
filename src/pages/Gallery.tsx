@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GalleryItem, Language } from '../types';
 import { PageBanner } from '../components/PageBanner';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 import { fetchGalleryItems, getFullImageUrl } from '../api/client';
 import { translations } from '../translations';
 import { 
@@ -55,6 +56,8 @@ const getYouTubeEmbedUrl = (url: string): string => {
 export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
   const t = translations[lang] || translations.EN;
 
+  useScrollReveal([]);
+
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -73,7 +76,6 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
     try {
       const data = await fetchGalleryItems(typeFilter);
       setItems(data);
-      console.log('📸 Gallery items loaded:', data);
       // Log each item's thumbnail info for debugging
       data.forEach(item => {
         console.log(`🖼️ Item ${item.id}:`, {
@@ -112,12 +114,12 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
 
   if (loading) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F9F9F9]">
+    <div className="min-h-screen flex items-center justify-center bg-[#FAF7F2]">
       <div className="flex flex-col items-center gap-6">
         {/* Logo with spinning animation */}
         <div className="relative">
           {/* Spinning ring */}
-          <div className="absolute inset-0 rounded-full border-4 border-[#C8102E] border-t-transparent animate-spin" />
+          <div className="absolute inset-0 rounded-full border-4 border-[#7A0C1F] border-t-transparent animate-spin" />
           
           {/* Logo image */}
           <img 
@@ -125,17 +127,17 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
             alt="Delta Travel & Tour" 
             className="w-20 h-20 rounded-full object-cover relative z-10 p-1 bg-white"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"%3E%3Crect width="80" height="80" fill="%23C8102E" rx="40"/%3E%3Ctext x="40" y="48" text-anchor="middle" dy=".3em" fill="white" font-size="28" font-family="sans-serif" font-weight="bold"%3EΔ%3C/text%3E%3C/svg%3E';
+              (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"%3E%3Crect width="80" height="80" fill="%237A0C1F" rx="40"/%3E%3Ctext x="40" y="48" text-anchor="middle" dy=".3em" fill="white" font-size="28" font-family="sans-serif" font-weight="bold"%3EΔ%3C/text%3E%3C/svg%3E';
             }}
           />
         </div>
         
         <div className="flex flex-col items-center gap-2">
-          <p className="text-sm font-semibold text-slate-700">{t.loadingGallery || 'Loading Gallery...'}</p>
+          <p className="text-sm font-semibold text-[#4A463F]">{t.loadingGallery || 'Loading Gallery...'}</p>
           <div className="flex items-center gap-1">
-            <span className="w-2 h-2 bg-[#C8102E] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-            <span className="w-2 h-2 bg-[#C8102E] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-            <span className="w-2 h-2 bg-[#C8102E] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+            <span className="w-2 h-2 bg-[#7A0C1F] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+            <span className="w-2 h-2 bg-[#7A0C1F] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+            <span className="w-2 h-2 bg-[#7A0C1F] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
           </div>
         </div>
       </div>
@@ -146,32 +148,32 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
   if (error) {
     return (
       <div className="text-center py-16">
-        <p className="text-red-600">{error}</p>
-        <button onClick={loadGallery} className="mt-4 text-[#C8102E] underline">{t.retry || "Retry"}</button>
+        <p className="text-[#7A0C1F]">{error}</p>
+        <button onClick={loadGallery} className="mt-4 text-[#7A0C1F] underline">{t.retry || "Retry"}</button>
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="pattern-texture">
       
       {/* Header Banner */}
        <PageBanner 
         badge={t.mediaLibraryBadge || "Media Library"}
         title={t.galleryPageTitle || "Photo & Video Gallery"}
         subtitle={t.galleryPageSubtitle || "Explore holy sites and sacred moments from Makkah, Madinah, and Umrah journeys."}
-        backgroundImage="/background/bg3.jpg"
+        backgroundImage="/photos/madinah-night-aerial.jpg"
       />
 
       {/* TYPE FILTER */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-8">
+      <section className="max-w-7xl mx-auto px-4 sm:px-8 reveal pt-14 pb-14">
         <div className="flex items-center justify-center gap-3 flex-wrap">
           <button
             onClick={() => setTypeFilter('all')}
-            className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+            className={`px-5 py-2.5  text-xs font-bold transition-all flex items-center gap-2 ${
               typeFilter === 'all'
-                ? 'bg-[#C8102E] text-white shadow-md'
-                : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+                ? 'bg-[#7A0C1F] text-white shadow-md'
+                : 'bg-white text-[#4A463F] hover:bg-[#F1EBE0] border border-black/[0.08]'
             }`}
           >
             <span>{t.allMedia || "All Media"}</span>
@@ -179,10 +181,10 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
 
           <button
             onClick={() => setTypeFilter('photo')}
-            className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+            className={`px-5 py-2.5  text-xs font-bold transition-all flex items-center gap-2 ${
               typeFilter === 'photo'
-                ? 'bg-[#C8102E] text-white shadow-md'
-                : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+                ? 'bg-[#7A0C1F] text-white shadow-md'
+                : 'bg-white text-[#4A463F] hover:bg-[#F1EBE0] border border-black/[0.08]'
             }`}
           >
             <ImageIcon className="w-4 h-4" />
@@ -191,10 +193,10 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
 
           <button
             onClick={() => setTypeFilter('video')}
-            className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+            className={`px-5 py-2.5  text-xs font-bold transition-all flex items-center gap-2 ${
               typeFilter === 'video'
-                ? 'bg-[#C8102E] text-white shadow-md'
-                : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+                ? 'bg-[#7A0C1F] text-white shadow-md'
+                : 'bg-white text-[#4A463F] hover:bg-[#F1EBE0] border border-black/[0.08]'
             }`}
           >
             <Film className="w-4 h-4" />
@@ -204,10 +206,13 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
       </section>
 
       {/* GALLERY GRID */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-8">
+      <section className="max-w-7xl mx-auto px-4 sm:px-8 reveal pt-14 pb-14">
         {items.length === 0 ? (
-          <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 p-8 space-y-3">
-            <p className="text-slate-500 text-sm font-semibold">{t.noGalleryItems || "No gallery items found."}</p>
+          <div className="text-center py-20 border border-black/[0.08]">
+            <div className="w-16 h-16 rounded-full bg-[#F1EBE0] border border-black/[0.06] flex items-center justify-center mx-auto mb-4">
+              <ImageIcon className="w-6 h-6 text-[#A6853A]" />
+            </div>
+            <p className="text-[#4A463F] text-sm">{t.noGalleryItems || "No gallery items found."}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -241,9 +246,9 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
                 <div
                   key={item.id}
                   onClick={() => handleOpenLightbox(item)}
-                  className="group relative bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-col aspect-[16/10]"
+                  className="group relative bg-white overflow-hidden shadow-sm border border-black/[0.08] cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-col aspect-[16/10]"
                 >
-                  <div className="w-full h-full relative overflow-hidden bg-slate-900">
+                  <div className="w-full h-full relative overflow-hidden bg-[#0E0C0A]">
                     {imageUrl ? (
                       <img
                         src={imageUrl}
@@ -257,26 +262,26 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
                           const parent = (e.target as HTMLImageElement).parentElement;
                           if (parent) {
                             const fallback = document.createElement('div');
-                            fallback.className = 'w-full h-full bg-slate-700 flex items-center justify-center text-slate-400 text-xs';
+                            fallback.className = 'w-full h-full bg-[#17130F] flex items-center justify-center text-[#9A9488] text-xs';
                             fallback.textContent = item.type === 'video' ? '🎬 Video' : '📷 No Image';
                             parent.appendChild(fallback);
                           }
                         }}
                       />
                     ) : (
-                      <div className="w-full h-full bg-slate-700 flex items-center justify-center text-slate-400 text-xs">
+                      <div className="w-full h-full bg-[#17130F] flex items-center justify-center text-[#9A9488] text-xs">
                         {item.type === 'video' ? '🎬 Video' : '📷 No Image'}
                       </div>
                     )}
 
                     {item.type === 'video' && (
                       <>
-                        <div className="absolute top-3 right-3 bg-slate-950/80 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-slate-700/80 z-10 shadow">
+                        <div className="absolute top-3 right-3 bg-black/80 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-white/10 z-10 shadow">
                           <span>▶</span>
-                          {item.duration && <span className="text-[10px] bg-slate-800/80 px-1.5 py-0.5 rounded">{item.duration}</span>}
+                          {item.duration && <span className="text-[10px] bg-[#17130F]/80 px-1.5 py-0.5 rounded">{item.duration}</span>}
                         </div>
 
-                        <div className="absolute inset-0 bg-slate-950/30 flex items-center justify-center transition-all group-hover:bg-slate-950/20 z-10">
+                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center transition-all group-hover:bg-black/20 z-10">
                           <div className="w-14 h-14 rounded-full bg-white/95 text-[#1A5B4B] flex items-center justify-center shadow-xl transition-transform duration-300 group-hover:scale-110">
                             <Play className="w-7 h-7 fill-[#1A5B4B] ml-1" />
                           </div>
@@ -284,17 +289,17 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
                       </>
                     )}
 
-                    <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-slate-950/90 via-slate-950/60 to-transparent text-white transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-20">
-                      <h3 className="font-bold text-sm text-white drop-shadow-sm mb-0.5">
+                    <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/90 via-black/55 to-transparent text-white transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-20">
+                      <h3 className="font-serif font-medium text-sm text-white drop-shadow-sm mb-0.5">
                         {((lang || '').toUpperCase() === 'AR' && item.titleAr) ? item.titleAr : (((lang || '').toUpperCase() === 'AM' && item.titleAm) ? item.titleAm : item.titleEn)}
                       </h3>
                       {item.location && (
-                        <p className="text-[11px] text-slate-300 font-medium flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-red-400" /> {((lang || '').toUpperCase() === 'AR' && item.locationAr) ? item.locationAr : (((lang || '').toUpperCase() === 'AM' && item.locationAm) ? item.locationAm : item.location)}
+                        <p className="text-[11px] text-[#B8B2A6] font-medium flex items-center gap-1">
+                          <MapPin className="w-3 h-3 text-[#A6853A]" /> {((lang || '').toUpperCase() === 'AR' && item.locationAr) ? item.locationAr : (((lang || '').toUpperCase() === 'AM' && item.locationAm) ? item.locationAm : item.location)}
                         </p>
                       )}
                       {item.description && (
-                        <p className="text-[10px] text-slate-300 line-clamp-1 mt-1 font-normal opacity-90">
+                        <p className="text-[10px] text-[#B8B2A6] line-clamp-1 mt-1 font-normal opacity-90">
                           {((lang || '').toUpperCase() === 'AR' && item.descriptionAr) ? item.descriptionAr : (((lang || '').toUpperCase() === 'AM' && item.descriptionAm) ? item.descriptionAm : item.description)}
                         </p>
                       )}
@@ -310,7 +315,7 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
       {/* LIGHTBOX MODAL */}
       {selectedItem && (
         <div 
-          className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200"
           onClick={() => {
             setSelectedItem(null);
             if (videoRef.current) {
@@ -319,7 +324,7 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
           }}
         >
           <div 
-            className="max-w-4xl w-full bg-slate-900 text-white rounded-3xl overflow-hidden shadow-2xl border border-slate-800 relative flex flex-col md:flex-row max-h-[90vh] my-auto"
+            className="max-w-4xl w-full bg-[#0E0C0A] text-white overflow-hidden shadow-xl border border-white/10 relative flex flex-col md:flex-row max-h-[90vh] my-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -329,7 +334,7 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
                   videoRef.current.pause();
                 }
               }}
-              className="absolute top-4 right-4 z-30 bg-slate-900/80 hover:bg-slate-800 text-white p-2 rounded-full border border-slate-700 shadow-md transition-colors"
+              className="absolute top-4 right-4 z-30 bg-[#0E0C0A]/80 hover:bg-[#17130F] text-white p-2 rounded-full border border-white/10 shadow-md transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -381,20 +386,20 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
               )}
             </div>
 
-            <div className="md:w-2/5 p-6 space-y-4 flex flex-col justify-between bg-slate-900 text-slate-100 overflow-y-auto">
+            <div className="md:w-2/5 p-6 space-y-4 flex flex-col justify-between bg-[#0E0C0A] text-[#F1EBE0] overflow-y-auto">
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <span className="px-3 py-1 bg-red-900/60 text-red-300 text-[10px] font-extrabold rounded-full uppercase tracking-wider inline-block border border-red-800/80">
+                  <span className="px-3 py-1 bg-red-900/60 text-red-300 text-[10px] font-medium rounded-full uppercase tracking-wider inline-block border border-red-800/80">
                     {selectedItem.type === 'video' ? '🎥 VIDEO' : '🖼️ PHOTO'}
                   </span>
                   {selectedItem.type === 'video' && selectedItem.duration && (
-                    <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5 text-red-400" /> {selectedItem.duration}
+                    <span className="text-[11px] font-bold text-[#9A9488] flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5 text-[#A6853A]" /> {selectedItem.duration}
                     </span>
                   )}
                 </div>
 
-                <h2 className="text-xl font-black text-white leading-snug">
+                <h2 className="font-serif text-xl font-medium text-white leading-snug">
                   {((lang || '').toUpperCase() === 'AR' && selectedItem.titleAr) ? selectedItem.titleAr : (((lang || '').toUpperCase() === 'AM' && selectedItem.titleAm) ? selectedItem.titleAm : selectedItem.titleEn)}
                 </h2>
 
@@ -405,24 +410,24 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
                 )}
 
                 {selectedItem.location && (
-                  <p className="text-xs text-slate-300 font-semibold flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4 text-red-400 flex-shrink-0" /> {((lang || '').toUpperCase() === 'AR' && selectedItem.locationAr) ? selectedItem.locationAr : (((lang || '').toUpperCase() === 'AM' && selectedItem.locationAm) ? selectedItem.locationAm : selectedItem.location)}
+                  <p className="text-xs text-[#B8B2A6] font-semibold flex items-center gap-1.5">
+                    <MapPin className="w-4 h-4 text-[#A6853A] flex-shrink-0" /> {((lang || '').toUpperCase() === 'AR' && selectedItem.locationAr) ? selectedItem.locationAr : (((lang || '').toUpperCase() === 'AM' && selectedItem.locationAm) ? selectedItem.locationAm : selectedItem.location)}
                   </p>
                 )}
 
                 {selectedItem.description && (
-                  <p className="text-xs text-slate-300 leading-relaxed pt-3 border-t border-slate-800">
+                  <p className="text-xs text-[#B8B2A6] leading-relaxed pt-3 border-t border-white/10">
                     {((lang || '').toUpperCase() === 'AR' && selectedItem.descriptionAr) ? selectedItem.descriptionAr : (((lang || '').toUpperCase() === 'AM' && selectedItem.descriptionAm) ? selectedItem.descriptionAm : selectedItem.description)}
                   </p>
                 )}
               </div>
 
-              <div className="pt-4 border-t border-slate-800 flex items-center gap-3">
+              <div className="pt-4 border-t border-white/10 flex items-center gap-3">
                 <button
                   onClick={handleShare}
-                  className="flex-1 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs py-2.5 rounded-xl border border-slate-700 transition-colors flex items-center justify-center gap-1.5"
+                  className="flex-1 bg-[#17130F] hover:bg-[#17130F] text-white font-bold text-xs py-2.5 border border-white/10 transition-colors flex items-center justify-center gap-1.5"
                 >
-                  {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4 text-slate-300" />}
+                  {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4 text-[#B8B2A6]" />}
                   <span>{copiedLink ? 'Link Copied!' : 'Share Media'}</span>
                 </button>
 
@@ -432,7 +437,7 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
                     target="_blank"
                     rel="noreferrer"
                     download
-                    className="bg-[#C8102E] hover:bg-[#a60d25] text-white font-bold text-xs p-2.5 rounded-xl shadow transition-colors"
+                    className="bg-[#7A0C1F] hover:bg-[#580815] text-white font-bold text-xs p-2.5 shadow transition-colors"
                     title="Download / View full resolution photo"
                   >
                     <Download className="w-4 h-4" />

@@ -7,6 +7,9 @@ import {
 } from './types';
 import { fetchPackages, subscribeSms } from './api/client';
 import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
+import { ThemeProvider } from './theme/ThemeContext';
+import { AudioPlayerProvider } from './audio/AudioPlayerContext';
+import { NasheedPlayerButton } from './components/NasheedPlayerButton';
 
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -19,6 +22,7 @@ import { About } from './pages/About';
 import { Packages } from './pages/Packages';
 import { Gallery } from './pages/Gallery';
 import { Contact } from './pages/Contact';
+import { Faq } from './pages/Faq';
 
 function MainLayout() {
   const { language, setLanguage, isRtl, dir, currentOption, t } = useLanguage();
@@ -98,25 +102,25 @@ function MainLayout() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F9F9F9]" dir={dir} lang={language}>
+      <div className="min-h-screen flex items-center justify-center bg-[#FAF7F2]" dir={dir} lang={language}>
         <div className="flex flex-col items-center gap-4">
           {/* Logo with pulse animation */}
           <div className="relative animate-pulse">
-            <div className="absolute -inset-4 rounded-full bg-[#C8102E]/10 animate-ping" />
+            <div className="absolute -inset-4 rounded-full bg-[#7A0C1F]/10 animate-ping" />
             <img 
-              src="/logo/logo.jpg" 
+              src="/logo/logo1.png" 
               alt="Delta Travel & Tour" 
-              className="w-20 h-20 rounded-full object-cover relative z-10 border-2 border-[#C8102E] p-1 bg-white"
+              className="w-20 h-20 object-contain relative z-10"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"%3E%3Crect width="80" height="80" fill="%23C8102E" rx="40"/%3E%3Ctext x="40" y="48" text-anchor="middle" dy=".3em" fill="white" font-size="28" font-family="sans-serif" font-weight="bold"%3EΔ%3C/text%3E%3C/svg%3E';
+                (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"%3E%3Crect width="80" height="80" fill="%237A0C1F" rx="40"/%3E%3Ctext x="40" y="48" text-anchor="middle" dy=".3em" fill="white" font-size="28" font-family="sans-serif" font-weight="bold"%3EΔ%3C/text%3E%3C/svg%3E';
               }}
             />
           </div>
           
           <div className="flex flex-col items-center gap-1">
-            <p className="text-sm font-semibold text-slate-700">Loading...</p>
-            <div className="w-32 h-1 bg-slate-200 rounded-full overflow-hidden">
-              <div className="h-full bg-[#C8102E] rounded-full animate-loading-bar" style={{ width: '60%' }} />
+            <p className="text-xs tracking-wide text-[#6B655A]">Loading...</p>
+            <div className="w-32 h-0.5 bg-black/10 overflow-hidden">
+              <div className="h-full bg-[#7A0C1F] animate-loading-bar" style={{ width: '60%' }} />
             </div>
           </div>
         </div>
@@ -126,7 +130,7 @@ function MainLayout() {
 
   return (
     <div 
-      className={`min-h-screen flex flex-col bg-[#F9F9F9] text-slate-800 ${fontClass} transition-colors duration-200`} 
+      className={`min-h-screen flex flex-col bg-[#FAF7F2] text-[#1A1712] ${fontClass} transition-colors duration-200`} 
       dir={dir}
       lang={language}
     >
@@ -170,6 +174,10 @@ function MainLayout() {
           <Gallery lang={language} />
         )}
 
+        {activePage === 'faqs' && (
+          <Faq lang={language} />
+        )}
+
         {activePage === 'contact' && (
           <Contact 
             setActivePage={setActivePage} 
@@ -186,6 +194,7 @@ function MainLayout() {
 
       {/* Floating WhatsApp Chat Launcher */}
       <FloatingWhatsApp />
+      <NasheedPlayerButton />
 
       {/* Real-time SMS Toast Notifier */}
       <SmsToastNotifier
@@ -207,8 +216,12 @@ function MainLayout() {
 
 export default function App() {
   return (
-    <LanguageProvider>
-      <MainLayout />
-    </LanguageProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <AudioPlayerProvider>
+          <MainLayout />
+        </AudioPlayerProvider>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }

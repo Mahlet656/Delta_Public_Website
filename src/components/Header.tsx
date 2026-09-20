@@ -17,6 +17,7 @@ import { Logo } from './Logo';
 import { getPublicSocialLinksApi } from '../api/socialLinks';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { CurrencySwitcher } from './CurrencySwitcher';
+import { ThemeToggle } from './ThemeToggle';
 import { useLanguage } from '../i18n/LanguageContext';
 
 interface HeaderProps {
@@ -70,6 +71,21 @@ export const Header: React.FC<HeaderProps> = ({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
   const [loadingSocial, setLoadingSocial] = useState(true);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Header sits transparent over the hero, then solidifies once the user
+  // scrolls past it.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Close the mobile drawer whenever the page changes.
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [activePage]);
   const t = translations[lang] || translations.EN;
 
   const navItems: { id: PageId; label: string }[] = [
@@ -77,6 +93,7 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'about', label: t.about },
     { id: 'packages', label: t.packages },
     { id: 'gallery', label: t.gallery },
+    { id: 'faqs', label: t.faqs },
     { id: 'contact', label: t.contact }
   ];
 
@@ -102,33 +119,39 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full shadow-sm bg-white transition-all duration-300">
-      {/* Top Utility Announcement & Social Bar (Dark Slate/Black) */}
-      <div className="bg-[#0b0f19] text-white text-xs py-2 px-4 border-b border-slate-800">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+    <header
+      className={`fixed top-0 inset-x-0 z-40 w-full transition-all duration-300 ${
+        scrolled || mobileMenuOpen
+          ? 'bg-[#FAF7F2]/95 backdrop-blur-md shadow-sm'
+          : 'bg-transparent'
+      }`}
+    >
+      {/* Top Utility Bar (currency, language, social) */}
+      <div className={`text-xs py-1.5 px-4 transition-colors duration-300 ${
+        scrolled ? 'bg-[#0E0C0A] text-white' : 'bg-black/25 backdrop-blur-sm text-white'
+      }`}>
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-end gap-2">
           
-          {/* Right Utilities */}
-          <div className="flex items-center space-x-3 rtl:space-x-reverse text-slate-300 text-[11px] sm:text-xs">
+          <div className="flex items-center space-x-3 rtl:space-x-reverse text-[#CFCAC2] text-[11px] sm:text-xs">
 
-            <span className="text-slate-700">|</span>
-
-            {/* Currency Selector ($ USD / ETB / SAR) */}
+            {/* Currency Selector */}
             <CurrencySwitcher currency={currency} setCurrency={setCurrency} />
 
-            <span className="text-slate-700">|</span>
+            <span className="text-white/15">|</span>
 
-            {/* Language Selector Dropdown (English, Amharic, Arabic) */}
+            {/* Language Selector Dropdown */}
             <LanguageSwitcher variant="dropdown" theme="dark" />
 
-            <span className="text-slate-700 hidden sm:inline">|</span>
+            <span className="text-white/15">|</span>
+
+            {/* Night theme toggle */}
+            <ThemeToggle />
+
+            <span className="text-white/15 hidden sm:inline">|</span>
 
             {/* Social Icons - Fetched from Backend */}
-            <div className="hidden sm:flex items-center space-x-2.5 rtl:space-x-reverse text-slate-400">
-              {loadingSocial ? (
-                <span className="text-[10px] text-slate-500">Loading...</span>
-              ) : socialLinks.length === 0 ? (
-                <span className="text-[10px] text-slate-500">No social links</span>
-              ) : (
+            <div className="hidden sm:flex items-center space-x-2.5 rtl:space-x-reverse text-[#9A9488]">
+              {loadingSocial ? null : socialLinks.length === 0 ? null : (
                 socialLinks.map((link) => {
                   const icon = getSocialIcon(link.platform);
                   return icon ? (
@@ -137,7 +160,7 @@ export const Header: React.FC<HeaderProps> = ({
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:text-red-500 transition-colors"
+                      className="hover:text-[#A6853A] transition-colors"
                       title={link.platform}
                     >
                       {icon}
@@ -152,36 +175,42 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Main Navigation Bar (White Background) */}
-      <div className="bg-white text-slate-900 py-3 px-4 sm:px-8 border-b border-slate-100 shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <div className={`py-4 px-4 sm:px-8 transition-colors duration-300 ${
+        scrolled ? 'border-b border-black/[0.06]' : 'border-b border-white/10'
+      }`}>
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           
-          {/* Brand Logo - Using the Logo component with header variant */}
+          {/* Brand Logo */}
           <button 
             onClick={() => setActivePage('home')} 
-            className="flex items-center gap-2.5 text-left rtl:text-right group cursor-pointer"
+            className="flex items-center text-left rtl:text-right group cursor-pointer flex-shrink-0"
           >
             <Logo 
-  brandName={t.brandName || "DELTA"} 
-  brandSubtitle={t.brandSubtitle || "Travel & Tour"} 
-  variant="light"
-  logoVariant="header"
-  size="md"
-  showText={true}  // ← Hide text
-/>
+              brandName="Delta Travel & Tour"
+              brandSubtitle={t.brandSubtitle || "Licensed Umrah Service Agency"} 
+              variant={scrolled ? 'light' : 'dark'}
+              logoVariant="header"
+              size="md"
+              showText={true}
+            />
           </button>
 
           {/* Desktop Links */}
-          <nav className="hidden lg:flex items-center space-x-6 rtl:space-x-reverse">
+          <nav className="hidden lg:flex items-center gap-7 rtl:space-x-reverse">
             {navItems.map((item) => {
               const isActive = activePage === item.id;
               return (
                 <button
                   key={item.id}
                   onClick={() => setActivePage(item.id)}
-                  className={`py-1 text-xs sm:text-sm font-bold transition-all relative flex items-center gap-1 ${
-                    isActive
-                      ? 'text-red-600 font-extrabold border-b-2 border-red-600'
-                      : 'text-slate-700 hover:text-red-600'
+                  className={`pb-0.5 text-[13px] tracking-wide transition-colors relative ${
+                    scrolled
+                      ? (isActive
+                          ? 'text-[#7A0C1F] border-b border-[#7A0C1F]'
+                          : 'text-[#1A1712] hover:text-[#7A0C1F]')
+                      : (isActive
+                          ? 'text-white border-b border-[#D8B978]'
+                          : 'text-white/80 hover:text-white')
                   }`}
                 >
                   <span>{item.label}</span>
@@ -189,12 +218,11 @@ export const Header: React.FC<HeaderProps> = ({
               );
             })}
           </nav>
-          
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 transition-colors"
+            className={`lg:hidden p-2 transition-colors ${scrolled || mobileMenuOpen ? 'text-[#1A1712]' : 'text-white'}`}
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -205,7 +233,7 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-white text-slate-900 border-b border-slate-200 py-4 px-6 shadow-xl animate-in slide-in-from-top duration-200">
+        <div className="lg:hidden bg-[#FAF7F2] text-[#1A1712] border-b border-black/[0.06] py-4 px-6 shadow-xl animate-in slide-in-from-top duration-200">
           <div className="flex flex-col space-y-3">
             {navItems.map((item) => (
               <button
@@ -214,10 +242,10 @@ export const Header: React.FC<HeaderProps> = ({
                   setActivePage(item.id);
                   setMobileMenuOpen(false);
                 }}
-                className={`text-left rtl:text-right py-2 text-sm font-bold transition-colors ${
+                className={`text-left rtl:text-right py-2 text-sm tracking-wide transition-colors ${
                   activePage === item.id
-                    ? 'text-red-600 font-extrabold border-l-4 rtl:border-r-4 rtl:border-l-0 border-red-600 pl-2'
-                    : 'text-slate-700 hover:text-red-600'
+                    ? 'text-[#7A0C1F] font-medium border-l-4 rtl:border-r-4 rtl:border-l-0 border-[#7A0C1F] pl-2'
+                    : 'text-[#4A463F] hover:text-[#7A0C1F]'
                 }`}
               >
                 {item.label}
@@ -225,20 +253,28 @@ export const Header: React.FC<HeaderProps> = ({
             ))}
 
             {/* Mobile Language Switcher */}
-            <div className="pt-3 pb-1 border-t border-slate-100 flex flex-col gap-1.5">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <div className="pt-3 pb-1 border-t border-black/[0.06] flex flex-col gap-1.5">
+              <span className="text-[11px] text-[#9A9488] uppercase tracking-wider">
                 Language / ቋንቋ / اللغة
               </span>
               <LanguageSwitcher variant="toggle" className="w-full justify-between" />
             </div>
 
-            <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
+            {/* Mobile Theme Toggle */}
+            <div className="pt-3 pb-1 border-t border-black/[0.06] flex items-center justify-between">
+              <span className="text-[11px] text-[#9A9488] uppercase tracking-wider">
+                Theme
+              </span>
+              <ThemeToggle className="!border-black/10 !text-[#4A463F] hover:!text-[#1A1712] hover:!border-black/20" />
+            </div>
+
+            <div className="pt-2 border-t border-black/[0.06] flex flex-col gap-2">
               <button
                 onClick={() => {
                   setActivePage('contact');
                   setMobileMenuOpen(false);
                 }}
-                className="w-full bg-[#C8102E] text-white font-bold text-center py-2.5 rounded-lg shadow uppercase text-xs"
+                className="w-full bg-[#7A0C1F] text-white text-center py-3 uppercase text-xs tracking-wide"
               >
                 {t.contact}
               </button>

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { OfficeImage, Language, PackageItem, PageId, Currency, FAQItem } from '../types';
+import { OfficeImage, Language, PackageItem, PageId, Currency } from '../types';
 import { PageBanner } from '../components/PageBanner';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 import { translations } from '../translations';
 import { getPublicOfficeImagesApi } from '../api/officeImages';
 import { getFullImageUrl } from '../api/client';
 import { submitInquiry, fetchPackages } from '../api/client';
-import { getFaqsApi } from '../api/faqs';
 import { formatPrice } from '../utils/formatPrice';
 import { useExchangeRate } from '../api/exchangeRate';
 import { 
@@ -19,10 +19,7 @@ import {
   Send, 
   CheckCircle2, 
   MessageSquare, 
-  ExternalLink,
-  Plus,
-  Minus,
-  HelpCircle
+  ExternalLink
 } from 'lucide-react';
 
 interface OfficeProps {
@@ -39,6 +36,8 @@ export const Contact: React.FC<OfficeProps> = ({
   onTriggerSmsToast 
 }) => {
   const t = translations[lang] || translations.EN;
+
+  useScrollReveal([]);
   const { rate } = useExchangeRate();
   
   // Office images state
@@ -57,16 +56,9 @@ export const Contact: React.FC<OfficeProps> = ({
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  // FAQs state
-  const [faqs, setFaqs] = useState<FAQItem[]>([]);
-  const [loadingFaqs, setLoadingFaqs] = useState(true);
-  const [faqError, setFaqError] = useState<string | null>(null);
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
-
   useEffect(() => {
     loadOfficeImages();
     loadPackages();
-    loadFaqs();
   }, []);
 
   const loadOfficeImages = async () => {
@@ -100,20 +92,6 @@ export const Contact: React.FC<OfficeProps> = ({
       console.error('Failed to load packages for dropdown:', e);
     } finally {
       setLoadingPackages(false);
-    }
-  };
-
-  const loadFaqs = async () => {
-    setLoadingFaqs(true);
-    setFaqError(null);
-    try {
-      const data = await getFaqsApi();
-      setFaqs(data);
-    } catch (error) {
-      setFaqError(t.errorLoadingFaqs || 'Failed to load FAQs. Please refresh the page.');
-      console.error('Error loading FAQs:', error);
-    } finally {
-      setLoadingFaqs(false);
     }
   };
 
@@ -171,53 +149,49 @@ export const Contact: React.FC<OfficeProps> = ({
     }
   };
 
-  const toggleFaq = (index: number) => {
-    setExpandedIndex(expandedIndex === index ? null : index);
-  };
-
   return (
-    <div>
+    <div className="pattern-texture">
       
       {/* Banner */}
         <PageBanner 
         badge={t.contactPageBadge}
         title={t.contactPageTitle}
         subtitle={t.contactPageSubtitle}
-        backgroundImage="/background/bg3.jpg"
+        backgroundImage="/photos/haram-night-crowd.jpg"
       />
 
       {/* Office Images Gallery */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-8">
+      <section className="max-w-7xl mx-auto px-4 sm:px-8 reveal pt-14 pb-14">
         <div className="space-y-6">
           <div>
-            <span className="text-xs font-bold text-[#C8102E] uppercase tracking-wider">
+            <span className="text-xs font-bold text-[#7A0C1F] uppercase tracking-wider">
               {t.officeGallery}
             </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mt-1">
+            <h2 className="font-serif text-2xl sm:text-3xl font-medium text-[#1A1712] mt-1">
               {t.seeOurOffice}
             </h2>
-            <p className="text-sm text-slate-600 max-w-2xl">
+            <p className="text-sm text-[#6B655A] max-w-2xl">
               {t.officeGalleryText}
             </p>
           </div>
 
           {loadingImages ? (
             <div className="flex flex-col items-center justify-center py-20 space-y-3">
-              <Loader2 className="w-8 h-8 animate-spin text-[#C8102E]" />
-              <p className="text-xs text-slate-500">{t.officeImagesLoading}</p>
+              <Loader2 className="w-8 h-8 animate-spin text-[#7A0C1F]" />
+              <p className="text-xs text-[#6B655A]">{t.officeImagesLoading}</p>
             </div>
           ) : error ? (
             <div className="text-center py-16">
-              <p className="text-red-600 text-sm">{error}</p>
-              <button onClick={loadOfficeImages} className="mt-4 text-[#C8102E] text-sm font-bold underline hover:no-underline">
+              <p className="text-[#7A0C1F] text-sm">{error}</p>
+              <button onClick={loadOfficeImages} className="mt-4 text-[#7A0C1F] text-sm font-bold underline hover:no-underline">
                 {t.retry}
               </button>
             </div>
           ) : images.length === 0 ? (
-            <div className="text-center py-16 bg-white rounded-xl border border-slate-200">
-              <Building2 className="w-12 h-12 mx-auto text-slate-300" />
-              <p className="text-slate-500 mt-3">{t.noOfficeImages}</p>
-              <p className="text-xs text-slate-400">{t.checkBackSoon}</p>
+            <div className="text-center py-16 bg-white border border-black/[0.08]">
+              <Building2 className="w-12 h-12 mx-auto text-[#B8B2A6]" />
+              <p className="text-[#6B655A] mt-3">{t.noOfficeImages}</p>
+              <p className="text-xs text-[#9A9488]">{t.checkBackSoon}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -226,7 +200,7 @@ export const Contact: React.FC<OfficeProps> = ({
                 return (
                   <div 
                     key={image.id} 
-                    className="group relative overflow-hidden rounded-xl bg-white border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300"
+                    className="group relative overflow-hidden bg-white border border-black/[0.08] shadow-sm hover:shadow-lg transition-all duration-300"
                   >
                     <div className="overflow-hidden relative">
                       <img 
@@ -241,10 +215,10 @@ export const Contact: React.FC<OfficeProps> = ({
                     {(image.title || image.description) && (
                       <div className="p-4">
                         {image.title && (
-                          <h3 className="font-bold text-slate-900 text-sm">{image.title}</h3>
+                          <h3 className="font-serif font-medium text-[#1A1712] text-sm">{image.title}</h3>
                         )}
                         {image.description && (
-                          <p className="text-xs text-slate-500 mt-1">{image.description}</p>
+                          <p className="text-xs text-[#6B655A] mt-1">{image.description}</p>
                         )}
                       </div>
                     )}
@@ -257,71 +231,71 @@ export const Contact: React.FC<OfficeProps> = ({
       </section>
 
       {/* Main Grid: Form + Info */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <section className="max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-1 lg:grid-cols-2 gap-10 reveal pt-14 pb-14">
         
         {/* Contact Info & Office Details */}
         <div className="space-y-6">
           <div className="space-y-2">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#C8102E]">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#7A0C1F]">
               {t.directContact}
             </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
+            <h2 className="font-serif text-2xl sm:text-3xl font-medium text-[#1A1712]">
               {t.visitHeadOfficeTitle}
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600">
+            <p className="text-xs sm:text-sm text-[#6B655A]">
               {t.visitHeadOfficeText}
             </p>
           </div>
 
-          <div className="space-y-4 text-xs text-slate-700">
+          <div className="space-y-4 text-xs text-[#4A463F]">
             
-            <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm flex items-start gap-3">
-              <div className="p-2.5 rounded-lg bg-red-50 text-[#C8102E] flex-shrink-0">
-                <MapPin className="w-5 h-5 text-[#C8102E]" />
+            <div className="p-4 bg-white border border-black/[0.08] shadow-sm flex items-start gap-3">
+              <div className="p-2.5 bg-[#F1EBE0] text-[#7A0C1F] flex-shrink-0">
+                <MapPin className="w-5 h-5 text-[#7A0C1F]" />
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 text-sm">{t.headquartersLocation}</h4>
-                <p className="text-slate-600 mt-0.5">{t.addressBuilding || "Bole Road, Friendship Business Centre"}</p>
-                <p className="text-slate-600 mt-0.5">{t.addressCity || "Addis Ababa, Ethiopia"}</p>
+                <h4 className="font-serif font-medium text-[#1A1712] text-sm">{t.headquartersLocation}</h4>
+                <p className="text-[#6B655A] mt-0.5">{t.addressBuilding || "Bole Road, Friendship Business Centre"}</p>
+                <p className="text-[#6B655A] mt-0.5">{t.addressCity || "Addis Ababa, Ethiopia"}</p>
               </div>
             </div>
 
-            <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm flex items-start gap-3">
-              <div className="p-2.5 rounded-lg bg-red-50 text-[#C8102E] flex-shrink-0">
-                <Phone className="w-5 h-5 text-[#C8102E]" />
+            <div className="p-4 bg-white border border-black/[0.08] shadow-sm flex items-start gap-3">
+              <div className="p-2.5 bg-[#F1EBE0] text-[#7A0C1F] flex-shrink-0">
+                <Phone className="w-5 h-5 text-[#7A0C1F]" />
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 text-sm">{t.phoneLines}</h4>
-                <p className="text-slate-600 mt-0.5">
+                <h4 className="font-serif font-medium text-[#1A1712] text-sm">{t.phoneLines}</h4>
+                <p className="text-[#6B655A] mt-0.5">
                   {t.mainHotline || "Main Hotline"}: <span dir="ltr" className="whitespace-nowrap inline-block">+251 91 013 6747</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 95 658 5555</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 95 659 5555</span>
                 </p>
-                <p className="text-slate-600">
+                <p className="text-[#6B655A]">
                   {t.whatsapp || "WhatsApp"}: <span dir="ltr" className="whitespace-nowrap inline-block">+251 91 049 3349</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 91 013 6747</span>
                 </p>
               </div>
             </div>
 
-            <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm flex items-start gap-3">
-              <div className="p-2.5 rounded-lg bg-red-50 text-[#C8102E] flex-shrink-0">
-                <Mail className="w-5 h-5 text-[#C8102E]" />
+            <div className="p-4 bg-white border border-black/[0.08] shadow-sm flex items-start gap-3">
+              <div className="p-2.5 bg-[#F1EBE0] text-[#7A0C1F] flex-shrink-0">
+                <Mail className="w-5 h-5 text-[#7A0C1F]" />
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 text-sm">{t.emailAddress}</h4>
-                <p className="text-slate-600 mt-0.5">{t.generalInquiries || "General Inquiries"}: info@deltatravel.com</p>
-                <p className="text-slate-600">{t.umrahDesk || "Umrah Desk"}: umrah@deltatravel.com</p>
-                <p className="text-slate-600">{t.supportDesk || "Support"}: support@deltatravel.com</p>
+                <h4 className="font-serif font-medium text-[#1A1712] text-sm">{t.emailAddress}</h4>
+                <p className="text-[#6B655A] mt-0.5">{t.generalInquiries || "General Inquiries"}: info@deltatravel.com</p>
+                <p className="text-[#6B655A]">{t.umrahDesk || "Umrah Desk"}: umrah@deltatravel.com</p>
+                <p className="text-[#6B655A]">{t.supportDesk || "Support"}: support@deltatravel.com</p>
               </div>
             </div>
 
-            <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm flex items-start gap-3">
-              <div className="p-2.5 rounded-lg bg-red-50 text-[#C8102E] flex-shrink-0">
-                <Clock className="w-5 h-5 text-[#C8102E]" />
+            <div className="p-4 bg-white border border-black/[0.08] shadow-sm flex items-start gap-3">
+              <div className="p-2.5 bg-[#F1EBE0] text-[#7A0C1F] flex-shrink-0">
+                <Clock className="w-5 h-5 text-[#7A0C1F]" />
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 text-sm">{t.officeHoursContact}</h4>
-                <p className="text-slate-600 mt-0.5">{t.monToSatHours || "Monday – Saturday: 2:30 AM – 11:30 PM LT"}</p>
-                <p className="text-slate-600">{t.sunAndHolidays || "Sunday & Holidays: On-call WhatsApp Assistance"}</p>
-                <p className="text-[10px] text-slate-500 mt-1">{t.emergencySupportNotice || "*24/7 emergency support available via phone"}</p>
+                <h4 className="font-serif font-medium text-[#1A1712] text-sm">{t.officeHoursContact}</h4>
+                <p className="text-[#6B655A] mt-0.5">{t.monToSatHours || "Monday – Saturday: 2:30 AM – 11:30 PM LT"}</p>
+                <p className="text-[#6B655A]">{t.sunAndHolidays || "Sunday & Holidays: On-call WhatsApp Assistance"}</p>
+                <p className="text-[10px] text-[#6B655A] mt-1">{t.emergencySupportNotice || "*24/7 emergency support available via phone"}</p>
               </div>
             </div>
 
@@ -329,24 +303,24 @@ export const Contact: React.FC<OfficeProps> = ({
         </div>
 
         {/* Contact Form */}
-        <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6">
-          <div className="border-b border-slate-100 pb-3">
-            <h3 className="text-xl font-bold text-slate-900">
+        <div className="bg-white p-6 sm:p-8 shadow-sm border border-black/[0.08] space-y-6">
+          <div className="border-b border-black/[0.06] pb-3">
+            <h3 className="font-serif text-xl font-medium text-[#1A1712]">
               {t.directInquiryTitle}
             </h3>
-            <p className="text-xs text-slate-600 mt-0.5">
+            <p className="text-xs text-[#6B655A] mt-0.5">
               {t.directInquirySub}
             </p>
           </div>
 
           {submitted ? (
-            <div className="bg-emerald-50 border border-emerald-200 p-8 rounded-xl text-center space-y-3">
+            <div className="bg-emerald-50 border border-emerald-200 p-8 text-center space-y-3">
               <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto" />
-              <h4 className="font-bold text-emerald-950 text-lg">{t.inquiryReceived}</h4>
-              <p className="text-xs text-slate-700">
+              <h4 className="font-serif font-medium text-emerald-950 text-lg">{t.inquiryReceived}</h4>
+              <p className="text-xs text-[#4A463F]">
                 {t.inquiryReceivedText}
               </p>
-              <p className="text-[10px] text-slate-500 mt-2">
+              <p className="text-[10px] text-[#6B655A] mt-2">
                 {t.reference}: DLT-INQ-{Math.floor(1000 + Math.random() * 9000)}
               </p>
             </div>
@@ -354,48 +328,48 @@ export const Contact: React.FC<OfficeProps> = ({
             <form onSubmit={handleSubmit} className="space-y-4 text-xs sm:text-sm">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">{t.fullName}</label>
+                  <label className="block font-bold text-[#4A463F] mb-1">{t.fullName}</label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. Ahmed Mohamed"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-red-600 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 border border-black/10 text-xs focus:border-[#7A0C1F] focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">{t.phoneNumber}</label>
+                  <label className="block font-bold text-[#4A463F] mb-1">{t.phoneNumber}</label>
                   <input
                     type="tel"
                     required
                     placeholder="+251 91 013 6747 "
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-red-600 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 border border-black/10 text-xs focus:border-[#7A0C1F] focus:outline-none"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">{t.emailOptional}</label>
+                  <label className="block font-bold text-[#4A463F] mb-1">{t.emailOptional}</label>
                   <input
                     type="email"
                     placeholder="ahmed@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-red-600 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 border border-black/10 text-xs focus:border-[#7A0C1F] focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">{t.inquirySubject}</label>
+                  <label className="block font-bold text-[#4A463F] mb-1">{t.inquirySubject}</label>
                   <select
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-red-600 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 border border-black/10 text-xs focus:border-[#7A0C1F] focus:outline-none"
                     disabled={loadingPackages}
                   >
                     <option value="">{t.selectPackage}</option>
@@ -421,21 +395,21 @@ export const Contact: React.FC<OfficeProps> = ({
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">{t.messageDetails}</label>
+                <label className="block font-bold text-[#4A463F] mb-1">{t.messageDetails}</label>
                 <textarea
                   required
                   rows={4}
                   placeholder={t.messagePlaceholder}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-red-600 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 border border-black/10 text-xs focus:border-[#7A0C1F] focus:outline-none"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#C8102E] hover:bg-[#a60d25] text-white font-bold text-xs sm:text-sm py-3 rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full bg-[#7A0C1F] hover:bg-[#580815] text-white font-bold text-xs sm:text-sm py-3 shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {loading ? (
                   <>
@@ -457,16 +431,16 @@ export const Contact: React.FC<OfficeProps> = ({
       </section>
 
       {/* Google Map Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-8">
-        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 overflow-hidden space-y-3">
+      <section className="max-w-7xl mx-auto px-4 sm:px-8 reveal pt-14 pb-14">
+        <div className="bg-white p-4 shadow-sm border border-black/[0.08] overflow-hidden space-y-3">
           <div className="flex items-center justify-between text-xs px-2">
-            <span className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-[#C8102E]" /> {t.mapTitle}
+            <span className="font-bold text-[#1A1712] text-sm flex items-center gap-1.5">
+              <MapPin className="w-4 h-4 text-[#7A0C1F]" /> {t.mapTitle}
             </span>
-            <span className="text-slate-500">{t.mapAddressTag || "Bole Road, Friendship Business Centre"}</span>
+            <span className="text-[#6B655A]">{t.mapAddressTag || "Bole Road, Friendship Business Centre"}</span>
           </div>
 
-          <div className="w-full h-80 rounded-xl overflow-hidden border border-slate-200">
+          <div className="w-full h-80 overflow-hidden border border-black/[0.08]">
             <iframe
               title="Delta Travel & Tour Office Location Map"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.8077163502057!2d38.78333007314347!3d8.989833989604644!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b85372f9878d1%3A0x1385d361c5cfcdd9!2sDelta%20Travel!5e0!3m2!1sen!2set!4v1787603287094!5m2!1sen!2set"
@@ -479,90 +453,6 @@ export const Contact: React.FC<OfficeProps> = ({
               sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
             />
           </div>
-        </div>
-      </section>
-
-      {/* FAQs Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-8">
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
-            <div>
-              <span className="text-xs font-bold text-[#C8102E] uppercase tracking-wider flex items-center gap-1">
-                <HelpCircle className="w-3.5 h-3.5" /> {t.faqs}
-              </span>
-              <h2 className="text-2xl font-black text-slate-900 mt-0.5">
-                {t.faqsTitle}
-              </h2>
-              <p className="text-sm text-slate-600">
-                {t.faqsSub}
-              </p>
-            </div>
-          </div>
-
-          {loadingFaqs ? (
-            <div className="flex flex-col items-center justify-center py-12 space-y-3">
-              <Loader2 className="w-8 h-8 animate-spin text-[#C8102E]" />
-              <p className="text-xs text-slate-500">{t.loadingFaqs}</p>
-            </div>
-          ) : faqError ? (
-            <div className="text-center py-12">
-              <p className="text-red-600 text-sm">{faqError}</p>
-              <button onClick={loadFaqs} className="mt-4 text-[#C8102E] text-sm font-bold underline hover:no-underline">
-                {t.retry}
-              </button>
-            </div>
-          ) : faqs.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center space-y-3">
-              <HelpCircle className="w-12 h-12 mx-auto text-[#E2E8F0]" />
-              <p className="text-slate-500 font-semibold">{t.noFaqsAvailable}</p>
-              <p className="text-xs text-slate-400">{t.noFaqsText}</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {faqs.map((faq, index) => {
-                const isExpanded = expandedIndex === index;
-                const question = ((lang || '').toUpperCase() === 'AR' && faq.questionAr)
-                  ? faq.questionAr
-                  : (((lang || '').toUpperCase() === 'AM' && faq.questionAm) ? faq.questionAm : faq.question);
-                const answer = ((lang || '').toUpperCase() === 'AR' && faq.answerAr)
-                  ? faq.answerAr
-                  : (((lang || '').toUpperCase() === 'AM' && faq.answerAm) ? faq.answerAm : faq.answer);
-
-                return (
-                  <div 
-                    key={faq.id} 
-                    className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md"
-                  >
-                    <button
-                      onClick={() => toggleFaq(index)}
-                      className="w-full px-6 py-4 flex items-center justify-between hover:bg-[#F9FAFB] transition-colors"
-                    >
-                      <div className="flex items-center gap-3 text-left rtl:text-right">
-                        <span className="text-[#C8102E] font-bold text-sm">Q{index + 1}.</span>
-                        <h3 className="font-semibold text-slate-900 text-sm">{question}</h3>
-                      </div>
-                      <div className="flex-shrink-0 ml-4 rtl:ml-0 rtl:mr-4">
-                        {isExpanded ? (
-                          <Minus className="w-5 h-5 text-[#C8102E]" />
-                        ) : (
-                          <Plus className="w-5 h-5 text-[#C8102E]" />
-                        )}
-                      </div>
-                    </button>
-
-                    {isExpanded && (
-                      <div className="px-6 pb-5 pt-1 border-t border-slate-100">
-                        <p className="text-sm text-slate-600 leading-relaxed">
-                          <span className="font-bold text-[#C8102E]">A:</span> {answer}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-          
         </div>
       </section>
     </div>

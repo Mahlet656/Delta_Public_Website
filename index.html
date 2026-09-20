@@ -4,6 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Delta Travel & Tour | Premium Umrah, Hajj & Travel Services</title>
+    <link rel="icon" type="image/png" href="/logo/logo-mark.png" />
+    <link rel="apple-touch-icon" href="/logo/logo-mark.png" />
+    <script>
+      // Apply the saved theme before first paint to avoid a flash of the
+      // wrong theme. Mirrors ThemeContext's storage key/logic.
+      (function () {
+        try {
+          var saved = localStorage.getItem('dvt_theme');
+          if (saved === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
     <meta name="description" content="Official portal for Delta Travel & Tour. Licensed and trusted Umrah and Hajj packages, fast visa processing, luxury hotel bookings, and dedicated guidance." />
     <meta name="keywords" content="Delta Travel, Umrah Packages, Hajj 2026, Umrah Visa, Makkah Hotels, Madinah Hotels, Islamic Travel Agency" />
     

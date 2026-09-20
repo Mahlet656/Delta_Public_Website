@@ -64,25 +64,25 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
   const hasDiscounts = pkg.discounts && pkg.discounts.length > 0;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full overflow-hidden border border-slate-200 my-8">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-[#0E0C0A]/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
+      <div className="bg-white shadow-xl max-w-3xl w-full overflow-hidden border border-black/[0.08] my-8">
         
-        <div className="bg-[#0b0f19] text-white p-5 sm:p-6 flex items-start justify-between relative border-b border-slate-800">
+        <div className="bg-[#0E0C0A] text-white p-5 sm:p-6 flex items-start justify-between relative border-b border-white/10">
           <div className="space-y-1 max-w-xl">
-            <span className="inline-block px-2.5 py-0.5 rounded-full bg-red-900/50 text-red-400 text-[11px] font-bold tracking-wider uppercase border border-red-800/60">
+            <span className="inline-block px-2.5 py-0.5 rounded-full bg-red-900/50 text-[#A6853A] text-[11px] font-bold tracking-wider uppercase border border-red-800/60">
               {((lang || '').toUpperCase() === 'AR' && pkg.categoryAr) ? pkg.categoryAr : (((lang || '').toUpperCase() === 'AM' && pkg.categoryAm) ? pkg.categoryAm : pkg.category)} {t.packageLabel || 'Package'}
             </span>
-            <h2 className="text-xl sm:text-2xl font-black font-sans text-white">
+            <h2 className="text-xl sm:text-2xl font-medium font-sans text-white">
               {((lang || '').toUpperCase() === 'AR') ? (pkg.titleAr || pkg.titleEn) : (((lang || '').toUpperCase() === 'AM') && pkg.titleAm) ? pkg.titleAm : pkg.titleEn}
             </h2>
-            <p className="text-sm text-slate-300 flex items-center gap-2">
+            <p className="text-sm text-[#B8B2A6] flex items-center gap-2">
               <span>{pkg.durationDays} {t.daysLabel || 'Days'}</span> • <span>{t.fromLabel || 'From'} {((lang || '').toUpperCase() === 'AR' && pkg.departureCityAr) ? pkg.departureCityAr : (((lang || '').toUpperCase() === 'AM' && pkg.departureCityAm) ? pkg.departureCityAm : pkg.departureCity)}</span>
             </p>
           </div>
 
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition-colors"
+            className="text-[#9A9488] hover:text-white p-1.5 hover:bg-[#17130F] transition-colors"
             title="Close"
           >
             <X className="w-6 h-6" />
@@ -92,26 +92,26 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
         <div className="p-5 sm:p-6 max-h-[75vh] overflow-y-auto space-y-6 text-xs sm:text-sm">
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="bg-red-50 p-4 rounded-xl border border-red-200">
+            <div className="bg-[#F1EBE0] p-4 border border-[#E7C6C6]">
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-[10px] text-red-900 font-semibold block uppercase">{t.packagePrice || 'Package Price'}</span>
-                  <p className="text-2xl font-black text-[#C8102E]">
+                  <p className="text-2xl font-medium text-[#7A0C1F]">
                     {getDisplayPrice()}
                     {hasDiscounts && (
-                      <span className="text-sm font-bold text-red-600 ml-2">
+                      <span className="text-sm font-bold text-[#7A0C1F] ml-2">
                         {t.discountAvailable || ((lang || '').toUpperCase() === 'AR' ? 'خصم متاح' : (lang || '').toUpperCase() === 'AM' ? 'ልዩ ቅናሽ አለ' : 'Discount Available')}
                       </span>
                     )}
                   </p>
                 </div>
-                <Sparkles className="w-6 h-6 text-[#C8102E]" />
+                <Sparkles className="w-6 h-6 text-[#7A0C1F]" />
               </div>
             </div>
           </div>
 
           {hasDiscounts && pkg.discounts && (
-            <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-200">
+            <div className="bg-emerald-50 p-4 border border-emerald-200">
               <h4 className="font-bold text-emerald-800 text-sm uppercase tracking-wider mb-2.5 flex items-center gap-2">
                 <Tag className="w-4 h-4 text-emerald-600" /> {t.availableDiscounts || 'Available Discounts'}
               </h4>
@@ -128,7 +128,7 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
                     : (((lang || '').toUpperCase() === 'AM' && discount.ageGroupAm) ? discount.ageGroupAm : discount.ageGroup);
 
                   return (
-                    <div key={idx} className="flex items-center justify-between bg-white p-3 rounded-lg border border-emerald-100">
+                    <div key={idx} className="flex items-center justify-between bg-white p-3 border border-emerald-100">
                       <div>
                         <span className="text-sm font-bold text-emerald-800">{discountLabel}</span>
                         {discountDesc && (
@@ -152,67 +152,67 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-              <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+            <div className="bg-[#FAF7F2] p-4 border border-black/[0.08]">
+              <h4 className="font-bold text-[#1A1712] text-xs uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
                 <CheckCircle className="w-4 h-4 text-emerald-600" /> {t.whatsIncluded || "What's Included"}
               </h4>
-              <ul className="space-y-1.5 text-sm text-slate-700">
+              <ul className="space-y-1.5 text-sm text-[#4A463F]">
                 {pkg.inclusions.map((inc, i) => (
                   <li key={i} className="flex items-start gap-2">
-                    <span className="text-[#C8102E] font-bold">•</span>
+                    <span className="text-[#7A0C1F] font-bold">•</span>
                     <span>{inc}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-              <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-slate-700" /> {t.scheduledDepartures || 'Scheduled Group Departures'}
+            <div className="bg-[#FAF7F2] p-4 border border-black/[0.08]">
+              <h4 className="font-bold text-[#1A1712] text-xs uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+                <Clock className="w-4 h-4 text-[#4A463F]" /> {t.scheduledDepartures || 'Scheduled Group Departures'}
               </h4>
               <div className="flex flex-wrap gap-2 mb-3">
                 {pkg.availableDates.map((date, idx) => (
-                  <span key={idx} className="px-2.5 py-1 bg-white text-slate-900 font-semibold text-xs rounded border border-slate-200 shadow-sm flex items-center gap-1">
-                    <Calendar className="w-3 h-3 text-[#C8102E]" /> {date}
+                  <span key={idx} className="px-2.5 py-1 bg-white text-[#1A1712] font-semibold text-xs rounded border border-black/[0.08] shadow-sm flex items-center gap-1">
+                    <Calendar className="w-3 h-3 text-[#7A0C1F]" /> {date}
                   </span>
                 ))}
               </div>
 
-              <p className="text-sm text-slate-500 italic">
+              <p className="text-sm text-[#6B655A] italic">
                 {t.includesFlightsNote || '*Includes roundtrip direct flights with our Airline Partners and full Mutawwif guidance.'}
               </p>
             </div>
           </div>
 
           <div>
-            <h4 className="font-bold text-slate-900 text-md mb-3 flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#C8102E]"></span>
+            <h4 className="font-bold text-[#1A1712] text-md mb-3 flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#7A0C1F]"></span>
               {t.dayByDayItinerary || 'Day-by-Day Spiritual Itinerary'}
             </h4>
-            <div className="space-y-2 border-l-2 border-red-500 rtl:border-r-2 rtl:border-l-0 pl-4 rtl:pr-4 rtl:pl-0">
+            <div className="space-y-2 border-l-2 border-[#A6853A] rtl:border-r-2 rtl:border-l-0 pl-4 rtl:pr-4 rtl:pl-0">
               {pkg.itinerary.map((item) => {
                 // Remove "Day X:" or similar prefix from the title if it exists to avoid duplication
                 const cleanTitle = item.title.replace(/^(Day|ቀን|اليوم)\s+\d+:\s*/i, '');
                 const dayNum = item.dayNumber || (item as any).day;
                 
                 return (
-                  <div key={dayNum} className="bg-slate-50 p-3 rounded-lg border border-slate-100">
-                    <div className="flex items-center justify-between font-bold text-slate-800 text-sm">
-                      <span className="text-[#C8102E] font-semibold">
+                  <div key={dayNum} className="bg-[#FAF7F2] p-3 border border-black/[0.06]">
+                    <div className="flex items-center justify-between font-bold text-[#1A1712] text-sm">
+                      <span className="text-[#7A0C1F] font-semibold">
                         {t.dayPrefix || 'Day'} {dayNum}: {cleanTitle}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-600 mt-1">{item.description}</p>
+                    <p className="text-xs text-[#6B655A] mt-1">{item.description}</p>
                   </div>
                 );
               })}
             </div>
           </div>
 
-          <div className="bg-slate-900 text-white p-5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="bg-[#0E0C0A] text-white p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="space-y-1 text-center sm:text-left rtl:sm:text-right">
               <h5 className="font-bold text-sm text-white">{t.haveQuestions || 'Have Questions About This Package?'}</h5>
-              <p className="text-xs text-slate-300">{t.haveQuestionsSub || 'Contact our senior travel consultants in Addis Ababa directly via Phone or WhatsApp.'}</p>
+              <p className="text-xs text-[#B8B2A6]">{t.haveQuestionsSub || 'Contact our senior travel consultants in Addis Ababa directly via Phone or WhatsApp.'}</p>
             </div>
 
             <div className="flex items-center gap-3 flex-wrap justify-center">
@@ -223,7 +223,7 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
                     : (((lang || '').toUpperCase() === 'AM' && pkg.titleAm) ? pkg.titleAm : pkg.titleEn);
                   trackAndOpenWhatsApp(pkg.id, titleForWhatsapp, pkg.priceUsd ?? pkg.price, (lang || 'en').toLowerCase());
                 }}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow transition-colors flex items-center gap-1.5"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 shadow transition-colors flex items-center gap-1.5"
               >
                 <svg 
                   className="w-4 h-4 fill-white" 
@@ -237,7 +237,7 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
 
               <a
                 href="tel:+251910136747"
-                className="bg-[#C8102E] hover:bg-[#a60d25] text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow transition-colors flex items-center gap-1.5"
+                className="bg-[#7A0C1F] hover:bg-[#580815] text-white font-bold text-xs px-4 py-2.5 shadow transition-colors flex items-center gap-1.5"
               >
                 <Phone className="w-4 h-4" />
                 <span>{t.callUs || 'Call'} <span dir="ltr" className="whitespace-nowrap inline-block">+251 91 013 6747</span></span>
